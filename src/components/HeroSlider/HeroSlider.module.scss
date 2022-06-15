@@ -1,0 +1,16 @@
+
+.hero-slider {
+  margin-top: 0rem;
+  &__item {
+    height: 250px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .hero-slider {
+    margin-top: .5rem;
+    &__item {
+      height: 450px;
+    }
+  }
+}

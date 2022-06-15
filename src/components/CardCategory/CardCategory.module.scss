@@ -1,0 +1,32 @@
+
+.card-category {
+  background-color: var(--bg-color);
+  width: 100%;
+  overflow: hidden;
+  &:hover &__img {
+    transform: scale(1.05);
+  }
+  &:hover &__name {
+    color: var(--primary-color);
+  }
+  &__content {
+    padding: 0 2rem;
+    margin-top: .5rem;
+    margin-bottom: 1.5rem;
+  }
+  &__img {
+    transition: .3s linear;
+  }
+  &__name{
+    
+    text-transform: uppercase;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--normal-font-size);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+}

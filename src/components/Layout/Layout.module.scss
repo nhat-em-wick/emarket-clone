@@ -1,0 +1,11 @@
+
+
+.content {
+  margin-top: var(--header-height-mobile);
+}
+
+@media screen and (min-width: 1024px) {
+  .content {
+    margin-top: 0;
+  }
+}
