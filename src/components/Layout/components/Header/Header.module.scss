@@ -1,52 +1,64 @@
-.header-mobile {
+.header-wrapper {
+  width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   position: fixed;
-  width: 100%;
   top: 0;
   left: 0;
-  background-color: #fff;
   z-index: 100;
+  background-color: #fff;
   height: var(--header-height-mobile);
-  padding: 0.5rem 0;
+  
+}
+.header-mobile {
   &__content {
+    padding: 0.5rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
   }
   &__icon {
     font-size: var(--icon-font-size);
-  }
-  &__logo {
-    height: 3rem;
-  }
-  &__search {
-    width: 100%;
-    position: relative;
-    margin-top: 0.5rem;
-
-    input {
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      padding: 0.7rem 2rem;
-    }
-    &-button {
-      position: absolute;
-      top: 50%;
-      right: 2rem;
-      transform: translateY(-50%);
+    &.icon--menu {
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--text-color-light);
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: transparent;
-      border: 0;
-      font-size: 2rem;
+      color: #fff;
+      border-radius: 5px;
+    }
+    &.icon--cart {
+      width: 3.5rem;
+      height: 3.5rem;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      position: relative;
+      span {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        color: #fff;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: var(--title-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--font-weight-bold);
+        font-size: var(--small-font-size);
+      }
     }
   }
 }
 .header-desktop {
   display: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
   &__top {
     height: 9rem;
     padding: 2.5rem 0;
@@ -183,6 +195,73 @@
     }
   }
 }
+.header-dynamic {
+  display: none;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: -100%;
+  left: 0;
+  z-index: 100;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+  &__logo {
+    height: 4.2rem;
+  }
+  &__pages {
+    flex: 1;
+    display: flex;
+    gap: 3rem;
+  }
+  &__page {
+    text-transform: uppercase;
+    color: var(--title-color);
+    font-weight: var(--font-weight-bold);
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+  &__cart {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 1.2rem;
+    cursor: pointer;
+    &-icon {
+      display: block;
+      width: 4.2rem;
+      height: 4.2rem;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      color: #fff;
+      position: relative;
+    }
+    &-badge {
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      color: #fff;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      background-color: var(--title-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--font-weight-bold);
+      font-size: 1.4rem;
+    }
+  }
+}
 
 .mega-menu {
   opacity: 0;
@@ -198,7 +277,7 @@
   transition: all 0.3s ease-in-out;
   text-transform: capitalize;
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: -0.5rem;
     width: 100%;
@@ -255,10 +334,28 @@
 }
 
 @media screen and (min-width: 1024px) {
+  .header-wrapper {
+    position: unset;
+    height: auto;
+  }
   .header-mobile {
     display: none;
   }
   .header-desktop {
     display: block;
   }
+  .header-dynamic {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+    &.active {
+      top: 0;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  
+  
+  
 }
