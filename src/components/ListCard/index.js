@@ -41,10 +41,10 @@ ListCardGrid.propTypes = {
   list: PropTypes.array,
 };
 
-export const ListCardSlider = ({ type, lists }) => {
+export const ListCardSlider = ({ type, lists, slidesPerView }) => {
   const nextSlideRef = useRef(null);
   const prevSlideRef = useRef(null);
-  console.log(nextSlideRef);
+
   return (
     <div className={cx('list-card-slider')}>
       <div className={cx('list-card-slider__control')}>
@@ -58,7 +58,7 @@ export const ListCardSlider = ({ type, lists }) => {
       <Swiper
         modules={[Navigation]}
         spaceBetween={30}
-        slidesPerView={5}
+        slidesPerView={slidesPerView}
         loop={true}
         navigation={{
           prevEl: prevSlideRef.current,
@@ -98,3 +98,13 @@ export const ListCardSlider = ({ type, lists }) => {
     </div>
   );
 };
+
+ListCardSlider.defaultProps = {
+  slidesPerView: 6
+}
+
+ListCardSlider.propTypes = {
+  type: PropTypes.string.isRequired,
+  list: PropTypes.array,
+  slidesPerView: PropTypes.number,
+}

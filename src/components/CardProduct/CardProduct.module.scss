@@ -21,6 +21,9 @@
     align-items: center;
     font-size: var(--small-font-size);
   }
+  &__img {
+    line-height: 0;
+  }
   &__content {
     padding: 2rem;
     text-align: center;
