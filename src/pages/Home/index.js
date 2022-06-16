@@ -52,7 +52,7 @@ const index = () => {
       <section className={cx('best-seller')}>
         <div className='container'>
           <ModTitle title='best seller' />
-          <ListCardGrid type='product' lists={products} />
+          <ListCardGrid type='product' lists={products} grid={4} />
         </div>
       </section>
 
