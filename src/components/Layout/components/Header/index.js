@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
@@ -8,23 +8,20 @@ const cx = classNames.bind(styles);
 
 const Header = (props) => {
   const [headerDynamic, setHeaderDynamic] = useState(false);
-  
+
   useEffect(() => {
-    const headerShirk = () => {
-      if (
-        document.body.scrollTop > 70 ||
-        document.documentElement.scrollTop > 70
-      ) {
+    const handleHeaderDynamic = () => {
+      if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
         setHeaderDynamic(true);
       } else {
         setHeaderDynamic(false);
       }
     };
-    window.addEventListener("scroll", headerShirk);
+    window.addEventListener('scroll', handleHeaderDynamic);
     return () => {
-      window.removeEventListener("scroll", headerShirk);
+      window.removeEventListener('scroll', handleHeaderDynamic);
     };
-  }, [])
+  }, []);
 
   return (
     <>
@@ -62,6 +59,7 @@ const Header = (props) => {
                 </span>
                 <span className={cx('header-desktop__cart-text')}>my cart</span>
                 <span className={cx('header-desktop__cart-price')}>- $0.00</span>
+                <CartItems items={[]} />
               </div>
             </div>
             <div className={cx('header-desktop__bottom')}>
@@ -96,7 +94,7 @@ const Header = (props) => {
           </div>
         </div>
       </header>
-      <header className={`${cx('header-dynamic')} ${ headerDynamic ? cx('active') : ''}`}>
+      <header className={`${cx('header-dynamic')} ${headerDynamic ? cx('active') : ''}`}>
         <div className="container">
           <div className={cx('header-dynamic__content')}>
             <div className={cx('header-dynamic__content-left')}>
@@ -119,6 +117,7 @@ const Header = (props) => {
                   <i className="bx bxs-shopping-bag"></i>
                   <span className={cx('header-dynamic__cart-badge')}>0</span>
                 </span>
+                <CartItems items={[]} />
               </div>
             </div>
           </div>
@@ -177,6 +176,82 @@ const SubCategory = (props) => {
         </li>
       ))}
     </ul>
+  );
+};
+
+const CartItems = ({items}) => {
+  return (
+    <div className={cx('header-cart-dropdown')}>
+      <div className={cx('header-cart-dropdown__content')}>
+        {
+          items.length > 0 ? <>
+          <ul className={cx('header-cart-dropdown__list')}>
+          <li className={cx('header-cart-dropdown__item')}>
+            <div className={cx('header-cart-dropdown__item-image')}>
+              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
+            </div>
+            <div className={cx('header-cart-dropdown__item-info')}>
+              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                Product Name asdasf efsdsdf asdasd asdvfvf sdas
+              </Link>
+              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+              <span className={cx('header-cart-dropdown__item-remove')}>
+                <i className="bx bx-trash"></i>
+              </span>
+            </div>
+          </li>
+          <li className={cx('header-cart-dropdown__item')}>
+            <div className={cx('header-cart-dropdown__item-image')}>
+              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
+            </div>
+            <div className={cx('header-cart-dropdown__item-info')}>
+              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                Product Name asdasf efsdsdf asdasd asdvfvf sdas
+              </Link>
+              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+              <span className={cx('header-cart-dropdown__item-remove')}>
+                <i className="bx bx-trash"></i>
+              </span>
+            </div>
+          </li>
+          <li className={cx('header-cart-dropdown__item')}>
+            <div className={cx('header-cart-dropdown__item-image')}>
+              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
+            </div>
+            <div className={cx('header-cart-dropdown__item-info')}>
+              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                Product Name asdasf efsdsdf asdasd asdvfvf sdas
+              </Link>
+              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+              <span className={cx('header-cart-dropdown__item-remove')}>
+                <i className="bx bx-trash"></i>
+              </span>
+            </div>
+          </li>
+        </ul>
+        <div className={cx('header-cart-dropdown__action')}>
+          <Link to="/cart" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--view-cart')}`}>
+            View Cart
+          </Link>
+          <Link to="/checkout" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--checkout')}`}>
+            Checkout
+          </Link>
+        </div>
+          </> : 
+          <>
+            <div className={cx('header-cart-dropdown__empty')}>
+              <p className={cx('header-cart-dropdown__empty-text')}>
+                Your cart is empty
+              </p>
+            </div>
+          </> 
+        }
+        
+      </div>
+    </div>
   );
 };
 
