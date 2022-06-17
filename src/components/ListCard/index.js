@@ -14,16 +14,19 @@ export const ListCardGrid = ({ type, lists, grid }) => {
   const classGrid = useMemo(() => {
     let className;
     if (grid === 3) {
-      className = 'col lg-4 md-3 sm-3 xs-6';
+      className = 'col lg-4 md-3 sm-4 xs-6';
     } else if (grid === 4) {
-      className = 'col lg-3 md-4 sm-6 xs-12';
+      className = 'col lg-3 md-3 sm-4 xs-6';
     } else if (grid === 5) {
-      className = 'col lg-2-4 md-5 sm-6 xs-12';
-    } else {
-      className = 'col lg-2 md-6 sm-6 xs-12';
+      className = 'col lg-2-4 md-3 sm-4 xs-6';
+    } else if(grid === 2) {
+      className = 'col lg-6 md-6 sm-6 xs-12';
+    }
+     else {
+      className = 'col lg-2 md-3 sm-4 xs-6';
     }
     return className;
-  }, []);
+  }, [grid]);
 
   return (
     <div className={cx('list-card-grid')}>

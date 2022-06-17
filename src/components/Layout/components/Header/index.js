@@ -179,77 +179,84 @@ const SubCategory = (props) => {
   );
 };
 
-const CartItems = ({items}) => {
+const CartItems = ({ items }) => {
   return (
     <div className={cx('header-cart-dropdown')}>
       <div className={cx('header-cart-dropdown__content')}>
-        {
-          items.length > 0 ? <>
-          <ul className={cx('header-cart-dropdown__list')}>
-          <li className={cx('header-cart-dropdown__item')}>
-            <div className={cx('header-cart-dropdown__item-image')}>
-              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
-            </div>
-            <div className={cx('header-cart-dropdown__item-info')}>
-              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                Product Name asdasf efsdsdf asdasd asdvfvf sdas
+        {items.length > 0 ? (
+          <>
+            <ul className={cx('header-cart-dropdown__list')}>
+              <li className={cx('header-cart-dropdown__item')}>
+                <div className={cx('header-cart-dropdown__item-image')}>
+                  <img
+                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
+                    alt=""
+                  />
+                </div>
+                <div className={cx('header-cart-dropdown__item-info')}>
+                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
+                  </Link>
+                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+                  <span className={cx('header-cart-dropdown__item-remove')}>
+                    <i className="bx bx-trash"></i>
+                  </span>
+                </div>
+              </li>
+              <li className={cx('header-cart-dropdown__item')}>
+                <div className={cx('header-cart-dropdown__item-image')}>
+                  <img
+                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
+                    alt=""
+                  />
+                </div>
+                <div className={cx('header-cart-dropdown__item-info')}>
+                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
+                  </Link>
+                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+                  <span className={cx('header-cart-dropdown__item-remove')}>
+                    <i className="bx bx-trash"></i>
+                  </span>
+                </div>
+              </li>
+              <li className={cx('header-cart-dropdown__item')}>
+                <div className={cx('header-cart-dropdown__item-image')}>
+                  <img
+                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
+                    alt=""
+                  />
+                </div>
+                <div className={cx('header-cart-dropdown__item-info')}>
+                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
+                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
+                  </Link>
+                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
+                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
+                  <span className={cx('header-cart-dropdown__item-remove')}>
+                    <i className="bx bx-trash"></i>
+                  </span>
+                </div>
+              </li>
+            </ul>
+            <div className={cx('header-cart-dropdown__action')}>
+              <Link to="/cart" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--view-cart')}`}>
+                View Cart
               </Link>
-              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-              <span className={cx('header-cart-dropdown__item-remove')}>
-                <i className="bx bx-trash"></i>
-              </span>
-            </div>
-          </li>
-          <li className={cx('header-cart-dropdown__item')}>
-            <div className={cx('header-cart-dropdown__item-image')}>
-              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
-            </div>
-            <div className={cx('header-cart-dropdown__item-info')}>
-              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                Product Name asdasf efsdsdf asdasd asdvfvf sdas
+              <Link to="/checkout" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--checkout')}`}>
+                Checkout
               </Link>
-              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-              <span className={cx('header-cart-dropdown__item-remove')}>
-                <i className="bx bx-trash"></i>
-              </span>
             </div>
-          </li>
-          <li className={cx('header-cart-dropdown__item')}>
-            <div className={cx('header-cart-dropdown__item-image')}>
-              <img src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp" alt="" />
-            </div>
-            <div className={cx('header-cart-dropdown__item-info')}>
-              <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                Product Name asdasf efsdsdf asdasd asdvfvf sdas
-              </Link>
-              <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-              <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-              <span className={cx('header-cart-dropdown__item-remove')}>
-                <i className="bx bx-trash"></i>
-              </span>
-            </div>
-          </li>
-        </ul>
-        <div className={cx('header-cart-dropdown__action')}>
-          <Link to="/cart" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--view-cart')}`}>
-            View Cart
-          </Link>
-          <Link to="/checkout" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--checkout')}`}>
-            Checkout
-          </Link>
-        </div>
-          </> : 
+          </>
+        ) : (
           <>
             <div className={cx('header-cart-dropdown__empty')}>
-              <p className={cx('header-cart-dropdown__empty-text')}>
-                Your cart is empty
-              </p>
+              <p className={cx('header-cart-dropdown__empty-text')}>Your cart is empty</p>
             </div>
-          </> 
-        }
-        
+          </>
+        )}
       </div>
     </div>
   );
