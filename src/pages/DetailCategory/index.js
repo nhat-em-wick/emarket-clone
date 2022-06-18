@@ -4,7 +4,9 @@ import classNames from 'classnames/bind';
 import styles from './DetailCategory.module.scss';
 import ModTitle from '~/components/ModTitle';
 import { ListCardGrid } from '~/components/ListCard';
-import { options } from './const';
+import SelectDropdown from '~/components/SelectDropdown';
+import Pagination from '~/components/Pagination';
+import { optionsSidebar, optionsSort } from './const';
 import products from '~/assets/data/products';
 const cx = classNames.bind(styles);
 const Category = (props) => {
@@ -13,8 +15,6 @@ const Category = (props) => {
   const handleShowGrid = (number) => {
     setNumberGrid(number);
   };
-
-  console.log(numberGrid);
 
   return (
     <div className={cx('wrapper')}>
@@ -30,7 +30,7 @@ const Category = (props) => {
                 <div className={cx('filter-top-panel')}>
                   <div className={cx('filter-top-panel__left')}>
                     <div className={cx('filter-top-panel__btn-show-sidebar')}>
-                      <i className='bx bx-menu'></i>
+                      <i className="bx bx-menu"></i>
                       Sidebar
                     </div>
                     <div className={cx('filter-top-panel__grid')}>
@@ -40,7 +40,9 @@ const Category = (props) => {
                           <div
                             key={index}
                             onClick={() => handleShowGrid(item)}
-                            className={cx('filter-top-panel__grid-item')}
+                            className={`${cx('filter-top-panel__grid-item')} ${
+                              numberGrid === item ? cx('active') : ''
+                            }`}
                           >
                             <span>{item}</span>
                           </div>
@@ -50,12 +52,24 @@ const Category = (props) => {
                   </div>
                   <div className={cx('filter-top-panel__right')}>
                     <div className={cx('filter-top-panel__sort')}>
-                      <span className={cx('filter-top-panel__sort-text')}>Sort By</span>
+                      <span className={cx('filter-top-panel__sort-text')}>Sort By:</span>
+                      <div className={cx('filter-top-panel__dropdown')}>
+                        <SelectDropdown defaultValue="default" options={optionsSort} />
+                      </div>
+                    </div>
+                    <div className={cx('filter-top-panel__show-item')}>
+                      <span className={cx('filter-top-panel__show-item-text')}>show:</span>
+                      <div className={cx('filter-top-panel__dropdown')}>
+                        <SelectDropdown defaultValue="default" options={optionsSort} />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <ListCardGrid type="product" lists={products} grid={numberGrid} />
               </section>
+                <div className={cx('pagination-wrapper')}>
+                  <Pagination />
+                </div>
             </div>
           </div>
         </div>
@@ -133,7 +147,7 @@ const SidebarPC = () => {
             </div>
           </div>
         </SidebarItem>
-        {options.map((item, index) => (
+        {optionsSidebar.map((item, index) => (
           <SidebarItem option={item.name} key={index}>
             {item.opts.map((opt, index) => (
               <div key={index} className={cx('filter__item-opt')}>
