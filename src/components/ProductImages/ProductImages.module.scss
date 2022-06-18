@@ -1,0 +1,35 @@
+.image-large {
+  margin-bottom: .5rem;
+}
+
+.images-slider {
+  position: relative;
+  &:hover .slider__control {
+    opacity: 1;
+  }
+  .slider__control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    font-size: 2.5rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--text-color-light);
+    border: none;
+
+    color: #fff;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    &.slider__control--prev {
+      left: 0;
+    }
+    &.slider__control--next {
+      right: 0;
+    }
+  }
+  
+}
