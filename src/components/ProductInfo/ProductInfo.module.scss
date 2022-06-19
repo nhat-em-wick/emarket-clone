@@ -1,5 +1,7 @@
 .product {
-
+  &-info {
+    margin-top: 2rem;
+  }
   &-name {
     font-size: 2.2rem;
     margin-bottom: 1.5rem;
@@ -42,14 +44,14 @@
   &-box-desc {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
     margin-bottom: 1.5rem;
-    .code, .availability {
+    .code,
+    .availability {
       display: flex;
-      gap: .5rem;
+      gap: 0.5rem;
     }
     .availability {
-     
       &--available {
         display: flex;
         align-items: center;
@@ -63,7 +65,7 @@
   &-box-select {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
     margin-bottom: 1.5rem;
     &__dropdown {
       width: 50%;
@@ -72,12 +74,13 @@
   &-box-qty {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 0.5rem;
     margin-bottom: 2.6rem;
     &__input-group {
       display: flex;
       align-items: center;
-      .decrease, .increase {
+      .decrease,
+      .increase {
         width: 3rem;
         height: 3rem;
         background-color: var(--border-color);
@@ -96,10 +99,10 @@
         border-top: 1px solid #d6d6d6;
         border-bottom: 1px solid #d6d6d6;
         -moz-appearance: textfield;
-            &::-webkit-inner-spin-button,
-            &::-webkit-outer-spin-button {
-              -webkit-appearance: none;
-            }
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+        }
       }
     }
   }
@@ -118,8 +121,9 @@
       border: none;
       padding: 1.2rem;
       cursor: pointer;
-      min-width: 19rem;
-      max-width: 20rem;
+
+      min-width: 13.5rem;
+      max-width: 15rem;
       text-transform: uppercase;
       font-weight: var(--font-weight-bold);
       color: #fff;
@@ -169,16 +173,38 @@
       line-height: 0;
       cursor: pointer;
       color: #fff;
+      &:hover {
+        opacity: 0.9;
+      }
       &.facebook {
-        background-color: #4267B2;
+        background-color: #4267b2;
       }
       &.twitter {
-        background-color: #1DA1F2;
+        background-color: #1da1f2;
       }
       &.instagram {
-        background-color: #E1306C;
+        background-color: #e1306c;
       }
     }
   }
-
 }
+
+@media screen and (min-width: 768px) {
+  .product {
+    &-box-action {
+      &__btn {
+        min-width: 18rem;
+        max-width: 19rem;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .product {
+    &-info {
+      margin-top: 0;
+    }
+  }
+}
+  
