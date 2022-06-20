@@ -79,7 +79,7 @@ export const ListCardSlider = ({ type, lists, slidesPerView }) => {
       </div>
       <Swiper
         modules={[Navigation]}
-        spaceBetween={30}
+        spaceBetween={8}
         slidesPerView={slidesPerView}
         loop={true}
         navigation={{
@@ -91,8 +91,25 @@ export const ListCardSlider = ({ type, lists, slidesPerView }) => {
           swiper.params.navigation.nextEl = nextSlideRef.current;
         }}
         className="card-slider__container"
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
+        breakpoints={{
+          320: {
+            slidesPerView: 2,
+            spaceBetween: 8,
+          },
+          // when window width is <= 999px
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 16,
+          },
+          992: {
+            slidesPerView: 4,
+            spaceBetween: 24,
+          },
+          1200: {
+            slidesPerView: 5,
+            spaceBetween: 30,
+          }
+        }}
       >
         {type === 'category' ? (
           <>

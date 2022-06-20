@@ -39,22 +39,28 @@
     flex-direction: column;
     margin-bottom: 0.5rem;
     &-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-weight: var(--font-weight-bold);
       color: var(--title-color);
       text-transform: uppercase;
       font-size: var(--normal-font-size);
       cursor: pointer;
+      position: relative;
     }
     &-icon {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
       font-size: 2rem;
       font-weight: var(--font-weight-bold);
-      transition: 0.3s ease-in-out;
+      i {
+        transition: 0.3s ease-in-out;
+      }
     }
     &.active &-icon {
-      transform: rotate(90deg);
+      i {
+        transform: rotate(90deg);
+      }
     }
     &-list-opt {
       max-height: 0;
@@ -63,7 +69,7 @@
       background-color: #fff;
     }
     &.active &-list-opt {
-      max-height: 30rem;
+      max-height: max-content;
     }
 
     &-opt {
@@ -269,7 +275,8 @@
     flex-direction: column;
     gap: 1rem;
   }
-  &__sort-text,&__show-item-text {
+  &__sort-text,
+  &__show-item-text {
     font-size: var(--small-font-size);
     text-transform: capitalize;
   }
@@ -284,20 +291,20 @@
   .filter-top-panel {
     flex-direction: row;
     &__grid {
-     
     }
     &__right {
       width: 50%;
       flex-direction: row;
       gap: 1.5rem;
     }
-    &__sort, &__show-item {
+    &__sort,
+    &__show-item {
       width: 50%;
       display: flex;
       gap: 0.5rem;
       align-items: center;
     }
-    
+
     &__dropdown {
       flex: 1;
     }
@@ -307,7 +314,6 @@
 @media screen and (min-width: 992px) {
   .filter-top-panel {
     &__btn-show-sidebar {
-
     }
   }
 }
