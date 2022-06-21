@@ -2,6 +2,7 @@ import Home from '~/pages/Home';
 import Following from '~/pages/Following';
 import DetailCategory from '~/pages/DetailCategory'
 import DetailProduct from '~/pages/DetailProduct'
+import Cart from '~/pages/Cart'
 const publicRoutes = [
   {
     path: '/',
@@ -18,6 +19,10 @@ const publicRoutes = [
   {
     path: '/product/:id',
     component: DetailProduct
+  },
+  {
+    path: '/cart',
+    component: Cart
   }
 ];
 
