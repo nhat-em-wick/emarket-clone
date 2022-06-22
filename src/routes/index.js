@@ -13,11 +13,11 @@ const publicRoutes = [
     component: Following,
   },
   {
-    path: '/category/:id',
+    path: '/category/:slug',
     component: DetailCategory
   },
   {
-    path: '/product/:id',
+    path: '/product/:slug',
     component: DetailProduct
   },
   {

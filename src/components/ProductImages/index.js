@@ -15,7 +15,7 @@ const ProductImages = ({ images }) => {
   const [activeThumb, setActiveThumb] = useState(0);
   const prevSlideRef = useRef(null);
   const nextSlideRef = useRef(null);
-
+  
   return (
     <>
       <div className={cx('image-large')}>
@@ -28,7 +28,7 @@ const ProductImages = ({ images }) => {
           thumbs={{ swiper: activeThumb }}
           className="product-images-slider"
         >
-          {images.map((image, index) => (
+          {images?.map((image, index) => (
             <SwiperSlide key={index}>
               <img src={image} alt="" />
             </SwiperSlide>
@@ -59,7 +59,7 @@ const ProductImages = ({ images }) => {
           modules={[Navigation]}
           className="product-images-slider-thumbs"
         >
-          {images.map((image, index) => (
+          {images?.map((image, index) => (
             <SwiperSlide key={index}>
               <div className='product-images-slider-thumbs-wrapper'>
                 <img src={image} alt="" />
@@ -73,7 +73,7 @@ const ProductImages = ({ images }) => {
 };
 
 ProductImages.propTypes = {
-  images: PropTypes.array.isRequired,
+  images: PropTypes.array,
 };
 
 export default ProductImages;

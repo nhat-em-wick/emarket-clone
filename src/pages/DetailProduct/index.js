@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import purify from "dompurify";
@@ -9,8 +9,12 @@ import ModTitle from '~/components/ModTitle';
 import { ListCardSlider } from '~/components/ListCard';
 import { useClickOutside } from '~/custom-hook';
 import { ProductInfoFull } from '~/components/ProductInfo';
+import Loading from '~/components/Loading';
+import Overlay from '~/components/Overlay';
 import { images } from './const';
 import products from '~/assets/data/products';
+
+import productsApi from '~/fake-api/products-api';
 
 const categories = [
   {
@@ -75,77 +79,82 @@ const categories = [
 
 const cx = classNames.bind(styles);
 const DetailProduct = (props) => {
-  const product = {
-    name: 'Ullamco Occaeca',
-    new_price: '$99.00',
-    product_code: 'P-01',
-    availability: true,
-    rating: 4.5,
-    colors: ['white', 'red', 'blue'],
-    description: `<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p></br><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p></br><strong>Nemo enim ipsam voluptatem</strong></br><ul>
-    <li>- 100% Brand New.</li>
-    <li>- Contains 1 PCS</li>
-    <li>- Simple and easy</li>
-    </ul></br>
-    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></br>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p></br><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p></br><strong>Nemo enim ipsam voluptatem</strong></br><ul>
-    <li>- 100% Brand New.</li>
-    <li>- Contains 1 PCS</li>
-    <li>- Simple and easy</li>
-    </ul></br>
-    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    `,
-  };
+
+  const params = useParams();
+  
+  const [product, setProduct] = useState({})
+  const [loading, setLoading] = useState(false)
+  
   const sidebarRef = useRef(null);
 
   const [activeSidebarMobile, setActiveSidebarMobile] = useState(false);
 
   useClickOutside(sidebarRef, () => setActiveSidebarMobile(false));
 
+  useEffect(() => {
+    setLoading(true)
+    const fetchProduct = async () => {
+      try {
+        const product = await productsApi.getProductBySlug(params.slug);
+        setProduct(product);
+        setLoading(false)
+      }catch (error) {
+        setLoading(true)
+        throw Error(error)
+      }
+    }
+    fetchProduct();
+  }, [params])
+
   return (
     <div className={cx('wrapper')}>
-      <div className={`${cx('overlay')} ${activeSidebarMobile ? cx('active') : ''}`}></div>
-      <div ref={sidebarRef} className={`${cx('sidebar-mobile-wrapper')} ${activeSidebarMobile ? cx('active') : ''}`}>
-        <span onClick={() => setActiveSidebarMobile(false)} class={cx('sidebar-mobile__close')}>
-          <i class="bx bx-x"></i>
-        </span>
-        <div class={cx('sidebar-mobile__content')}>
-          <Sidebar />
-        </div>
-      </div>
-      <div className="container">
-        <div className="row">
-          <div className="col col lg-3 md-0 sm-0 xs-0">
+      {
+        loading ? <Loading loading={loading} /> : <>
+         <Overlay active={activeSidebarMobile} />
+        <div ref={sidebarRef} className={`${cx('sidebar-mobile-wrapper')} ${activeSidebarMobile ? cx('active') : ''}`}>
+          <span onClick={() => setActiveSidebarMobile(false)} class={cx('sidebar-mobile__close')}>
+            <i class="bx bx-x"></i>
+          </span>
+          <div class={cx('sidebar-mobile__content')}>
             <Sidebar />
           </div>
-          <div className="col lg-9 md-12 sm-12 xs-12">
-            <div className={cx('content')}>
-              <div onClick={() => setActiveSidebarMobile(true)} className={cx('btn-sidebar')}>
-                <i className="bx bx-menu"></i>Sidebar
-              </div>
-              <div className={cx('content__header')}>
-                <div className="row">
-                  <div className="col lg-6 md-12 sm-12 xs-12">
-                    <ProductImages images={images} />
-                  </div>
-                  <div className="col lg-6 md-12 sm-12 xs-12">
-                    <ProductInfoFull product={product} />
+        </div>
+        <div className="container">
+          <div className="row">
+            <div className="col col lg-3 md-0 sm-0 xs-0">
+              <Sidebar />
+            </div>
+            <div className="col lg-9 md-12 sm-12 xs-12">
+              <div className={cx('content')}>
+                <div onClick={() => setActiveSidebarMobile(true)} className={cx('btn-sidebar')}>
+                  <i className="bx bx-menu"></i>Sidebar
+                </div>
+                <div className={cx('content__header')}>
+                  <div className="row">
+                    <div className="col lg-6 md-12 sm-12 xs-12">
+                      <ProductImages images={product?.image_gallery} />
+                    </div>
+                    <div className="col lg-6 md-12 sm-12 xs-12">
+                      <ProductInfoFull product={product} />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className={cx('content__body')}>
-                <TabUI product={product} />
+                <div className={cx('content__body')}>
+                  <TabUI product={product} />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className={cx('related')}>
-        <div className="container">
-          <ModTitle title="related products" />
-          <ListCardSlider lists={products} type="product" slidesPerView={6} />
-        </div>
-      </div>
+        <div className={cx('related')}>
+          <div className="container">
+            <ModTitle title="related products" />
+            <ListCardSlider list={products} type="product" slidesPerView={6} />
+          </div>
+        </div> 
+        </>
+      }
+      
     </div>
   );
 };

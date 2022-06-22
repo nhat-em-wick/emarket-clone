@@ -57,7 +57,7 @@ const Cart = (props) => {
               </table>
             </div>
           </div>
-          <div className="col lg-3 md-4 sm-6 xs-12">
+          <div className="col lg-3 sm-o-6 md-o-8 md-4 sm-6 xs-12">
             <div className={cx('summary')}>
               <h2 className={cx('summary__heading')}>Summary</h2>
               <div className={cx('summary__item')}>

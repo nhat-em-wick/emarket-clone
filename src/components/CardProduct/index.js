@@ -15,13 +15,19 @@ const CardProduct = (props) => {
 
   return (
     <div className={cx('card-product')}>
-      {product.price_old && <span className={cx('card-product__label-sale')}>45%</span>}
-      <Link to="#" className={cx('card-product__img')}>
-        <img src={product.image} alt={product.name} />
+      {product.price_old && <span className={cx('card-product__label-sale')}>
+        {Math.round(
+          ((product.price_new - product.price_old) / product.price_old) *
+            100
+        )}
+        %
+      </span>}
+      <Link to={`/product/${product.slug}`} className={cx('card-product__img')}>
+        <img src={product.image_thumb} alt={product.name} />
       </Link>
       <div className={cx('card-product__content')}>
         <h3 className={cx('card-product__name')}>
-          <Link to="#" className={cx('card-product__name-link')}>
+          <Link to={`/product/${product.slug}`} className={cx('card-product__name-link')}>
             {product.name}
           </Link>
         </h3>
@@ -29,8 +35,8 @@ const CardProduct = (props) => {
           <span className={cx('card-product__stars-inner')} style={{ width: `${percentRating}%` }}></span>
         </span>
         <div className={cx('card-product__price')}>
-          <span className={cx('card-product__price-new')}>{product.price_new}</span>
-          {product.price_old && <span className={cx('card-product__price-old')}>{product.price_old}</span>}
+          <span className={cx('card-product__price-new')}>${product.price_new}</span>
+          {product.price_old && <span className={cx('card-product__price-old')}>${product.price_old}</span>}
         </div>
       </div>
       <div className={cx('card-product__action')}>

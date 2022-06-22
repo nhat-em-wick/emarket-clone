@@ -6,7 +6,7 @@ import { useClickOutside } from '~/custom-hook'
 
 const cx = classNames.bind(styles)
 
-const SelectDropdown = ({defaultValue, options}) => {
+const SelectDropdown = ({defaultValue, options, onChange, type}) => {
 
   const [selected, setSelected] = useState(defaultValue || 'Default')
   const [isOpen, setIsOpen] = useState(false)
@@ -14,8 +14,9 @@ const SelectDropdown = ({defaultValue, options}) => {
   const dropdownRef = useRef(null)
 
   const handleChoose = (item) => {
-    setSelected(item.name)
+    setSelected(item.description)
     setIsOpen(false)
+    onChange(type, item.value)
   }
   
   useClickOutside(dropdownRef, () => setIsOpen(false))
@@ -30,7 +31,7 @@ const SelectDropdown = ({defaultValue, options}) => {
         {
           options.map((item, index) => (
             <div key={index} onClick={() => handleChoose(item)} className={cx('select-dropdown__opt')}>
-              {item.name}
+              {item.description}
             </div>
           ))
         }

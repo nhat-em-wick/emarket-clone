@@ -10,7 +10,7 @@ import 'swiper/css';
 
 const cx = classNames.bind(styles);
 
-export const ListCardGrid = ({ type, lists, grid }) => {
+export const ListCardGrid = ({ type, list, grid }) => {
   const classGrid = useMemo(() => {
     let className;
     if (grid === 3) {
@@ -33,7 +33,7 @@ export const ListCardGrid = ({ type, lists, grid }) => {
       <div className="row">
         {type === 'category' ? (
           <>
-            {lists.map((item, index) => (
+            {list.map((item, index) => (
               <div key={index} className={`${cx('list-card-grid__item')} ${classGrid}`}>
                 <CardCategory item={item} />
               </div>
@@ -41,8 +41,8 @@ export const ListCardGrid = ({ type, lists, grid }) => {
           </>
         ) : (
           <>
-            {lists.map((item, index) => (
-              <div ey={index} className={`${cx('list-card-grid__item')} ${classGrid}`}>
+            {list.map((item, index) => (
+              <div key={index} className={`${cx('list-card-grid__item')} ${classGrid}`}>
                 <CardProduct item={item} />
               </div>
             ))}
@@ -63,7 +63,7 @@ ListCardGrid.propTypes = {
   grid: PropTypes.number
 };
 
-export const ListCardSlider = ({ type, lists, slidesPerView }) => {
+export const ListCardSlider = ({ type, list, slidesPerView }) => {
   const nextSlideRef = useRef(null);
   const prevSlideRef = useRef(null);
 
@@ -106,14 +106,14 @@ export const ListCardSlider = ({ type, lists, slidesPerView }) => {
             spaceBetween: 24,
           },
           1200: {
-            slidesPerView: 5,
+            slidesPerView: 6,
             spaceBetween: 30,
           }
         }}
       >
         {type === 'category' ? (
           <>
-            {lists.map((item, index) => (
+            {list.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className={`${cx('list-card-slider__item')}`}>
                   <CardCategory item={item} />
@@ -123,7 +123,7 @@ export const ListCardSlider = ({ type, lists, slidesPerView }) => {
           </>
         ) : (
           <>
-            {lists.map((item, index) => (
+            {list.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className={`${cx('list-card-slider__item')}`}>
                   <CardProduct item={item} />

@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import logo from '~/assets/images/logo.png';
-import { pages, categories } from './const';
+import { pages } from './const';
+
+import categoriesApi from '~/fake-api/categories-api';
+
 const cx = classNames.bind(styles);
 
 const Header = (props) => {
   const [headerDynamic, setHeaderDynamic] = useState(false);
-
+  const [categories, setCategories] = useState([])
   useEffect(() => {
     const handleHeaderDynamic = () => {
       if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
@@ -22,6 +25,18 @@ const Header = (props) => {
       window.removeEventListener('scroll', handleHeaderDynamic);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categories = await categoriesApi.getListCategories()
+        setCategories(categories)
+      } catch (error) {
+        throw Error(error)
+      }
+    }
+    fetchCategories()
+  }, [])
 
   return (
     <>
@@ -134,18 +149,15 @@ const MegaMenu = (props) => {
       <ul className={cx('mega-menu')}>
         {categories.map((category, index) => (
           <li className={cx('mega-menu__item')} key={index}>
-            <span className={cx('mega-menu__icon')}>
-              <i className={category.icon}></i>
-            </span>
-            <Link to={category.path} className={cx('mega-menu__link')}>
+            <Link to={`/category/${category.slug}`} className={cx('mega-menu__link')}>
               {category.name}
             </Link>
-            {category?.subCategories?.length > 0 && (
+            {category?.children?.length > 0 && (
               <>
                 <span className={`${cx('mega-menu__icon')} ${cx('icon--sub')}`}>
                   <i className="bx bx-chevron-right"></i>
                 </span>
-                <SubCategory categories={category?.subCategories} />
+                <SubCategory categories={category?.children} />
               </>
             )}
           </li>
@@ -157,20 +169,21 @@ const MegaMenu = (props) => {
 
 const SubCategory = (props) => {
   const categories = props.categories;
+  
   return (
     <ul className={cx('mega-menu__sub')}>
       {categories?.map((category, index) => (
         <li className={cx('mega-menu__sub-item')} key={index}>
-          <Link to={category.path} className={cx('mega-menu__sub-link')}>
+          <Link to={`/category/${category.slug}`} className={cx('mega-menu__sub-link')}>
             {category.name}
           </Link>
 
-          {category?.subCategories?.length > 0 && (
+          {category?.children?.length > 0 && (
             <>
               <span className={cx('mega-menu__sub-icon--sub')}>
                 <i className="bx bx-chevron-right"></i>
               </span>
-              <SubCategory categories={category.subCategories} />
+              <SubCategory categories={category.children} />
             </>
           )}
         </li>

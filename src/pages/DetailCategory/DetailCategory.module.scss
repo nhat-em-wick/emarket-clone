@@ -1,5 +1,36 @@
 .wrapper {
-  margin: 2rem 0;
+  padding: 1rem 0;
+  position: relative;
+  min-height: 70vh;
+}
+.sidebar-mobile {
+  width: 30rem;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  background-color: #fff;
+  padding: 3rem 1rem;
+  padding-top: 3.5rem;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: 0.3s ease-in-out;
+  &.active {
+    transform: translateX(0);
+  }
+
+  &__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--title-color);
+  }
 }
 .filter {
   &-wrapper {
@@ -32,6 +63,18 @@
     font-size: var(--normal-font-size);
   }
   &__list {
+    max-height: 100vh;
+    overflow-y: scroll;
+    position: relative;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: var(--text-color);
+    }
     padding: 1rem 2rem;
   }
   &__item {
@@ -71,7 +114,11 @@
     &.active &-list-opt {
       max-height: max-content;
     }
-
+    &-list-opt > &-opt:not(:last-child) {
+      // .filter__item-opt__checkbox {
+      border-bottom: 1px solid var(--border-color);
+      // }
+    }
     &-opt {
       &__search {
         display: flex;
@@ -94,13 +141,13 @@
           }
         }
       }
+
       &__checkbox {
         position: relative;
         display: flex;
         align-items: center;
         gap: 0.5rem;
         padding: 1.5rem 0;
-        border-bottom: 1px solid var(--border-color);
 
         label {
           text-transform: capitalize;
@@ -143,6 +190,7 @@
         }
       }
       &__price {
+        padding: 1rem 0;
         &-input {
           display: flex;
           gap: 1rem;
@@ -281,6 +329,11 @@
     text-transform: capitalize;
   }
 }
+.content {
+  &__product {
+    min-height: 50vh;
+  }
+}
 
 .pagination-wrapper {
   display: flex;
@@ -319,6 +372,9 @@
 }
 
 @media screen and (min-width: 1200px) {
+  .sidebar-mobile {
+    display: none;
+  }
   .filter-top-panel {
     &__btn-show-sidebar {
       display: none;

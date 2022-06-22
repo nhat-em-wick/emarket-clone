@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import purify from "dompurify";
 import HeroSlider from '~/components/HeroSlider'
 import { ListCardGrid, ListCardSlider } from '~/components/ListCard';
@@ -7,14 +7,37 @@ import Banner from '~/components/Banner'
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss'
 import { policy } from './const';
-import categories from '~/assets/data/categories';
-import products from '~/assets/data/products';
+
 import banner1 from '~/assets/images/banner1.jpg'
 import banner2 from '~/assets/images/banner2.jpg'
+import productsApi from '~/fake-api/products-api';
+import categoriesApi from '~/fake-api/categories-api';
 
 const cx = classNames.bind(styles)
 
-const index = () => {
+const Home = () => {
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 10,
+  })
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { products } = await productsApi.getAllProducts(filters)
+      setProducts(products)
+    }
+    fetchProducts()
+  }, [])
+
+  useEffect(() =>{
+    const fetchCategories = async () => {
+      const  categories  = await categoriesApi.getAllCategories()
+      setCategories(categories)
+    }
+    fetchCategories()
+  }, [])
+
   return (
     <div>
       <HeroSlider />
@@ -39,7 +62,7 @@ const index = () => {
       <section className={cx('categories')}>
         <div className='container'>
           <ModTitle title='shop by categories' />
-          <ListCardSlider type='category' lists={categories} slidesPerView={6} />
+          <ListCardSlider type='category' list={categories} slidesPerView={6} />
         </div>
       </section>
 
@@ -52,7 +75,7 @@ const index = () => {
       <section className={cx('best-seller')}>
         <div className='container'>
           <ModTitle title='best seller' />
-          <ListCardGrid type='product' lists={products} grid={6} />
+          <ListCardGrid type='product' list={products} grid={6} />
         </div>
       </section>
 
@@ -65,12 +88,13 @@ const index = () => {
       <section className={cx('trending')}>
         <div className='container'>
           <ModTitle title='trending items' />
-          <ListCardSlider type='product' lists={products} slidesPerView={6} />
+          <ListCardSlider type='product' list={products} slidesPerView={6} />
         </div>
       </section>
+      
       
     </div>
   )
 }
 
-export default index
+export default Home
