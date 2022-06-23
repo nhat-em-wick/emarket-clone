@@ -9,6 +9,7 @@ import { contactInfo } from './const';
 const cx = classNames.bind(styles);
 
 const Footer = (props) => {
+  
   return (
     <footer className={`${cx('wrapper')}`}>
       <section className={cx('banner')}>

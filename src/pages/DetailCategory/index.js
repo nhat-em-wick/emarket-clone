@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './DetailCategory.module.scss';
@@ -6,21 +6,38 @@ import ModTitle from '~/components/ModTitle';
 import { ListCardGrid } from '~/components/ListCard';
 import SelectDropdown from '~/components/SelectDropdown';
 import Pagination from '~/components/Pagination';
-import { optionsColor, optionsSize, optionsSort, optionsShowItem } from './const';
+import { optionsColor, optionsSize, optionsShowItem } from './const';
 import Overlay from '~/components/Overlay';
 import Loading from '~/components/Loading';
-import { useClickOutside } from '~/custom-hook';
+import { useClickOutside, useDebounce } from '~/custom-hook';
 import { useParams } from 'react-router-dom';
 import productsApi from '~/fake-api/products-api';
 import categoriesApi from '~/fake-api/categories-api';
+
 
 const cx = classNames.bind(styles);
 const Category = (props) => {
   const [numberGrid, setNumberGrid] = useState(4);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingProduct, setLoadingProduct] = useState(false);
   const [category, setCategory] = useState();
   const [products, setProducts] = useState([]);
+ 
+  const [filters, setFilters] = useState({
+    page: 1,
+    limit: 10,
+    colors: [],
+    sizes: [],
+    price_gte: 0,
+    price_lte: 10000
+  });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0
+  })
+
   const params = useParams();
   const sidebarRef = useRef(null);
 
@@ -29,23 +46,56 @@ const Category = (props) => {
   };
 
   useClickOutside(sidebarRef, () => setOpenSidebar(false));
-  console.log(params.slug)
+
   useEffect(() => {
-    setLoadingPage(true);
-    const fetchProductAndCate = async () => {
+    setLoadingPage(true)
+    const fetchCategory = async () => {
+      const resCate = await categoriesApi.getCategoryBySlug(params.slug);
+      setCategory(resCate);
+      setFilters({
+        ...filters,
+        category: resCate.slug
+      })
+      setLoadingPage(false)
+    }
+    fetchCategory()
+  }, [params])
+
+  useLayoutEffect(() => {
+    const fetchProducts = async () => {
+      setLoadingProduct(true)
       try {
-        const resCate = await categoriesApi.getCategoryBySlug(params.slug) 
-        const productByCate = await productsApi.findProductByCategory(resCate.slug)
-        
-        setCategory(resCate);
-        setProducts(productByCate.products);
-        setLoadingPage(false);
+        const resProducts = await productsApi.getAllProducts(filters);
+        setProducts(resProducts.products);
+        setPagination(resProducts.pagination)
+        setLoadingProduct(false);
       } catch (error) {
         throw Error(error);
       }
     };
-    fetchProductAndCate();
-  }, [params]);
+    if (filters.category !== undefined) {
+      fetchProducts();
+    }
+  }, [filters]);
+
+  
+
+  const handlePageChange = (page) => {
+    setFilters({
+      ...filters,
+      page: page
+    });
+  };
+
+  const handleShowItem = (number) => {
+    setFilters({
+      ...filters,
+      limit: number,
+      page: 1
+    })
+  }
+
+  console.log('fi', filters)
 
   return (
     <div className={cx('wrapper')}>
@@ -59,12 +109,12 @@ const Category = (props) => {
               <i class="bx bx-x"></i>
             </span>
 
-            <Sidebar />
+            <Sidebar setFilters={setFilters} filters={filters} />
           </div>
           <div className="container">
             <div className="row">
               <div className="col lg-3 md-0 sm-0 xs-0">
-                <Sidebar />
+                <Sidebar setFilters={setFilters} filters={filters} />
               </div>
               <div className="col lg-9 md-12 sm-12 xs-12">
                 <div className={cx('content')}>
@@ -83,9 +133,8 @@ const Category = (props) => {
                               <div
                                 key={index}
                                 onClick={() => handleShowGrid(item)}
-                                className={`${cx('filter-top-panel__grid-item')} ${
-                                  numberGrid === item ? cx('active') : ''
-                                }`}
+                                className={`${cx('filter-top-panel__grid-item')} ${numberGrid === item ? cx('active') : ''
+                                  }`}
                               >
                                 <span>{item}</span>
                               </div>
@@ -94,31 +143,31 @@ const Category = (props) => {
                         </div>
                       </div>
                       <div className={cx('filter-top-panel__right')}>
-                        <div className={cx('filter-top-panel__sort')}>
-                          <span className={cx('filter-top-panel__sort-text')}>Sort By:</span>
-                          <div className={cx('filter-top-panel__dropdown')}>
-                            <SelectDropdown defaultValue="default" options={optionsSort.attributes} type="sort" />
-                          </div>
-                        </div>
                         <div className={cx('filter-top-panel__show-item')}>
                           <span className={cx('filter-top-panel__show-item-text')}>show:</span>
                           <div className={cx('filter-top-panel__dropdown')}>
                             <SelectDropdown
                               defaultValue="default"
-                              options={optionsShowItem.attributes}
+                              options={optionsShowItem.values}
                               type="show-item"
+                              onChange={(type, number) => handleShowItem(number)}
                             />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className={cx('content__product')}>
-                      <ListCardGrid type="product" list={products} grid={numberGrid} />
-
-                      <div className={cx('pagination-wrapper')}>
-                        <Pagination />
-                      </div>
+                      { products.length <= 0 && !loadingProduct && 'khong tim thay sp nao' }
+                      {
+                        loadingProduct ? <Loading loading={loadingProduct} /> : <ListCardGrid type="product" list={products} grid={numberGrid} />
+                      }
                     </div>
+                    {
+                      products.length > 0 && <div className={cx('pagination-wrapper')}>
+                        <Pagination pagination={pagination} onPageChange={(page) => handlePageChange(page)} current={filters.page} />
+                      </div>
+                    }
+
                   </section>
                 </div>
               </div>
@@ -132,18 +181,22 @@ const Category = (props) => {
 
 Category.propTypes = {};
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const [priceFilter, setPriceFilter] = useState({
-    min: 1000,
-    max: 7500,
+    min: 0,
+    max: 10000,
   });
 
   const [checkedColor, setCheckedColor] = useState([]);
   const [checkedSize, setCheckedSize] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('')
 
   const minRangeRef = useRef(null);
   const maxRangeRef = useRef(null);
   const progressRef = useRef(null);
+
+  const debounceValueSearch = useDebounce(searchTerm, 700)
+  const debouncePrice = useDebounce(priceFilter, 700)
 
   const handleCheckedColor = (value) => {
     setCheckedColor((prev) => {
@@ -165,6 +218,25 @@ const Sidebar = () => {
       }
     });
   };
+
+  useEffect(() => {
+    props.setFilters({
+      ...props.filters,
+      page: 1,  
+      colors: checkedColor,
+      sizes: checkedSize,
+      q: searchTerm,
+      price_gte: priceFilter.min,
+      price_lte: priceFilter.max
+    });
+  }, [checkedColor, checkedSize, debounceValueSearch, debouncePrice]);
+
+  const handleSearchValue = (e) => {
+    const searchValue = e.target.value;
+    if (!searchValue.startsWith(' ')) {
+      setSearchTerm(searchValue);
+    }
+  }
 
   const handleTypingFilterPrice = (e) => {
     if (e.target.className === 'input-price-min') {
@@ -209,6 +281,16 @@ const Sidebar = () => {
     progressRef.current.style.right = 100 - (priceFilter.max / minRangeRef.current.max) * 100 + '%';
   }, [priceFilter]);
 
+  const handleResetFilters = () => {
+    setSearchTerm('')
+    setCheckedColor([]);
+    setCheckedSize([]);
+    setPriceFilter({
+      min: 0,
+      max: 10000,
+    });
+  };
+
   return (
     <div className={cx('filter-wrapper')}>
       <h3 className={cx('filter__heading')}>Shop by</h3>
@@ -216,7 +298,7 @@ const Sidebar = () => {
         <SidebarItem option={'search'}>
           <div className={cx('filter__item-opt')}>
             <div className={cx('filter__item-opt__search')}>
-              <input type={'text'} placeholder="search" />
+              <input value={searchTerm} type={'text'} placeholder="search" onChange={e => handleSearchValue(e)} />
               <button className={cx('search-btn')}>
                 <i className="bx bx-search"></i>
               </button>
@@ -293,7 +375,7 @@ const Sidebar = () => {
                   min="0"
                   max="10000"
                   value={priceFilter.min || 0}
-                  step="500"
+                  step="100"
                 />
                 <input
                   ref={maxRangeRef}
@@ -303,7 +385,7 @@ const Sidebar = () => {
                   min="0"
                   max="10000"
                   value={priceFilter.max}
-                  step="500"
+                  step="100"
                 />
               </div>
             </div>
@@ -311,7 +393,9 @@ const Sidebar = () => {
         </SidebarItem>
       </div>
       <div className={cx('clear-filter')}>
-        <button className={cx('clear-filter__btn')}>reset all</button>
+        <button onClick={handleResetFilters} className={cx('clear-filter__btn')}>
+          reset all
+        </button>
       </div>
     </div>
   );

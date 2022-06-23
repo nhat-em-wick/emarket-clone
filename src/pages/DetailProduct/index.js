@@ -15,67 +15,9 @@ import { images } from './const';
 import products from '~/assets/data/products';
 
 import productsApi from '~/fake-api/products-api';
+import categoriesApi from '~/fake-api/categories-api';
 
-const categories = [
-  {
-    path: '/',
-    name: 'Gift & Toys',
-    icon: 'bx bxs-gift',
-    subCategories: [
-      {
-        path: '/',
-        name: 'smart phone',
-        subCategories: [
-          { path: '/', name: 'samsung' },
-          { path: '/', name: 'apple' },
-          { path: '/', name: 'oppo' },
-          { path: '/', name: 'vivo' },
-        ],
-      },
-      {
-        path: '/',
-        name: 'laptop',
-        subCategories: [
-          { path: '/', name: 'dell' },
-          { path: '/', name: 'HP' },
-          { path: '/', name: 'macbook' },
-          { path: '/', name: 'vivo' },
-          { path: '/', name: 'dell' },
-          { path: '/', name: 'HP' },
-          { path: '/', name: 'macbook' },
-          { path: '/', name: 'vivo' },
-          { path: '/', name: 'dell' },
-          { path: '/', name: 'HP' },
-          { path: '/', name: 'macbook' },
-          { path: '/', name: 'vivo' },
-          { path: '/', name: 'dell' },
-          { path: '/', name: 'HP' },
-          { path: '/', name: 'macbook' },
-          { path: '/', name: 'vivo' },
-          { path: '/', name: 'dell' },
-          { path: '/', name: 'HP' },
-          { path: '/', name: 'macbook' },
-          { path: '/', name: 'vivo' },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/',
-    name: 'Electronics',
-    icon: 'bx bxs-bolt',
-    subCategories: [
-      {
-        path: '/',
-        name: 'monitor',
-      },
-      {
-        path: '/',
-        name: 'camera',
-      },
-    ],
-  },
-];
+
 
 const cx = classNames.bind(styles);
 const DetailProduct = (props) => {
@@ -83,6 +25,7 @@ const DetailProduct = (props) => {
   const params = useParams();
   
   const [product, setProduct] = useState({})
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
   
   const sidebarRef = useRef(null);
@@ -95,7 +38,10 @@ const DetailProduct = (props) => {
     setLoading(true)
     const fetchProduct = async () => {
       try {
-        const product = await productsApi.getProductBySlug(params.slug);
+       
+        const [product, resCate] = await Promise.all([productsApi.getProductBySlug(params.slug),categoriesApi.getListCategories()
+        ])
+        setCategories(resCate)
         setProduct(product);
         setLoading(false)
       }catch (error) {
@@ -105,7 +51,6 @@ const DetailProduct = (props) => {
     }
     fetchProduct();
   }, [params])
-
   return (
     <div className={cx('wrapper')}>
       {
@@ -116,13 +61,13 @@ const DetailProduct = (props) => {
             <i class="bx bx-x"></i>
           </span>
           <div class={cx('sidebar-mobile__content')}>
-            <Sidebar />
+            <Sidebar categories={categories} />
           </div>
         </div>
         <div className="container">
           <div className="row">
             <div className="col col lg-3 md-0 sm-0 xs-0">
-              <Sidebar />
+              <Sidebar categories={categories} />
             </div>
             <div className="col lg-9 md-12 sm-12 xs-12">
               <div className={cx('content')}>
@@ -161,12 +106,12 @@ const DetailProduct = (props) => {
 
 DetailProduct.propTypes = {};
 
-const Sidebar = (props) => {
+const Sidebar = ({categories}) => {
   return (
     <div className={cx('sidebar')}>
       <h3 className={cx('sidebar__title')}>Categories</h3>
       <ul className={cx('sidebar__list')}>
-        {categories.map((item, index) => (
+        {categories?.map((item, index) => (
           <SideBarItem key={index} item={item} paddingLeft={2} />
         ))}
       </ul>
@@ -184,17 +129,17 @@ const SideBarItem = ({ item, paddingLeft }) => {
   return (
     <li className={`${cx('sidebar__item-wrapper')} ${activeSub ? cx('active') : ''}`}>
       <div className={cx('sidebar__item')}>
-        <Link to={'#'} className={cx('sidebar__link')}>
+        <Link to={`/category/${item.slug}`} className={cx('sidebar__link')}>
           {item.name}
         </Link>
-        {item?.subCategories?.length > 0 && (
+        {item?.children?.length > 0 && (
           <span onClick={handleActiveSub} className={`${cx('sidebar__icon')} ${activeSub ? cx('active') : ''}`}>
             <i className="bx bx-chevron-right"></i>
           </span>
         )}
       </div>
-      {item?.subCategories?.length > 0 && (
-        <SubCategoryList active={activeSub} paddingLeft={paddingLeftStyle} categories={item?.subCategories} />
+      {item?.children?.length > 0 && (
+        <SubCategoryList active={activeSub} paddingLeft={paddingLeftStyle} categories={item?.children} />
       )}
     </li>
   );
@@ -210,17 +155,17 @@ const SubCategoryItem = ({ item, paddingLeft }) => {
   return (
     <li className={`${cx('sidebar__sub-item-wrapper')} ${activeSub ? cx('active') : ''}`}>
       <div style={{ paddingLeft: `${paddingLeft}rem` }} className={cx('sidebar__sub-item')}>
-        <Link to="#" className={cx('sidebar__sub-link')}>
+        <Link to={`/category/${item.slug}`} className={cx('sidebar__sub-link')}>
           {item.name}
         </Link>
-        {item?.subCategories?.length > 0 && (
+        {item?.children?.length > 0 && (
           <span onClick={handleActiveSub} className={`${cx('sidebar__sub-icon')} ${activeSub ? cx('active') : ''}`}>
             <i className="bx bx-chevron-right"></i>
           </span>
         )}
       </div>
-      {item?.subCategories?.length > 0 && (
-        <SubCategoryList paddingLeft={paddingLeftStyle} active={activeSub} categories={item?.subCategories} />
+      {item?.children?.length > 0 && (
+        <SubCategoryList paddingLeft={paddingLeftStyle} active={activeSub} categories={item?.children} />
       )}
     </li>
   );

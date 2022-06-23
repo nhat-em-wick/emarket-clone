@@ -19,10 +19,9 @@ export const ListCardGrid = ({ type, list, grid }) => {
       className = 'col lg-3 md-3 sm-4 xs-6';
     } else if (grid === 5) {
       className = 'col lg-2-4 md-3 sm-4 xs-6';
-    } else if(grid === 2) {
+    } else if (grid === 2) {
       className = 'col lg-6 md-6 sm-6 xs-12';
-    }
-     else {
+    } else {
       className = 'col lg-2 md-3 sm-4 xs-6';
     }
     return className;
@@ -54,16 +53,16 @@ export const ListCardGrid = ({ type, list, grid }) => {
 };
 
 ListCardGrid.defaultProps = {
-  grid: 6
-}
+  grid: 6,
+};
 
 ListCardGrid.propTypes = {
   type: PropTypes.string.isRequired,
   list: PropTypes.array.isRequired,
-  grid: PropTypes.number
+  grid: PropTypes.number,
 };
 
-export const ListCardSlider = ({ type, list, slidesPerView }) => {
+export const ListCardSlider = ({ type, list, slidesPerView, loading }) => {
   const nextSlideRef = useRef(null);
   const prevSlideRef = useRef(null);
 
@@ -108,18 +107,34 @@ export const ListCardSlider = ({ type, list, slidesPerView }) => {
           1200: {
             slidesPerView: 6,
             spaceBetween: 30,
-          }
+          },
         }}
       >
         {type === 'category' ? (
           <>
-            {list.map((item, index) => (
-              <SwiperSlide key={index}>
-                <div className={`${cx('list-card-slider__item')}`}>
-                  <CardCategory item={item} />
-                </div>
-              </SwiperSlide>
-            ))}
+            {loading ? (
+              <>
+                {Array(slidesPerView)
+                  .fill()
+                  .map((item, index) => (
+                    <SwiperSlide key={index}>
+                      <div className={`${cx('list-card-slider__item')}`}>
+                        <CardCategory.Loading />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+              </>
+            ) : (
+              <>
+                {list.map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <div className={`${cx('list-card-slider__item')}`}>
+                      <CardCategory item={item} />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </>
+            )}
           </>
         ) : (
           <>

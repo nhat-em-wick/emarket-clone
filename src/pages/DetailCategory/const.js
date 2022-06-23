@@ -7,7 +7,7 @@ const optionsColor = {
     { description: 'Orange', value: 'orange' },
     { description: 'White', value: 'white' },
   ],
-}
+};
 
 const optionsSize = {
   name: 'size',
@@ -16,38 +16,11 @@ const optionsSize = {
     { description: 'Medium', value: 'm' },
     { description: 'Large', value: 'l' },
   ],
-}
-
-const optionsSort = {
-  name: 'sort',
-  attributes: [
-    {
-      description: 'Name (A - Z)',
-      value: 'desc',
-    },
-    {
-      description: 'Name (Z - A)',
-      value: 'asc',
-    },
-  ],
 };
 
 const optionsShowItem = {
   name: 'show-item',
-  attributes: [
-    {
-      description: '10 item',
-      value: 10,
-    },
-    {
-      description: '15 item',
-      value: 15,
-    },
-    {
-      description: '20 item',
-      value: 20,
-    },
-  ],
+  values: [10, 15, 20],
 };
 
-export { optionsColor, optionsSize, optionsShowItem, optionsSort }
+export { optionsColor, optionsSize, optionsShowItem };

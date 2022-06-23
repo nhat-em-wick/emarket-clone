@@ -14,9 +14,9 @@ const SelectDropdown = ({defaultValue, options, onChange, type}) => {
   const dropdownRef = useRef(null)
 
   const handleChoose = (item) => {
-    setSelected(item.description)
+    setSelected(item)
     setIsOpen(false)
-    onChange(type, item.value)
+    onChange(type, item)
   }
   
   useClickOutside(dropdownRef, () => setIsOpen(false))
@@ -29,9 +29,9 @@ const SelectDropdown = ({defaultValue, options, onChange, type}) => {
       </div>
       <div ref={dropdownRef} className={`${cx('select-dropdown__opts')} ${ isOpen ? cx('open') : ''}`}>
         {
-          options.map((item, index) => (
+          options?.map((item, index) => (
             <div key={index} onClick={() => handleChoose(item)} className={cx('select-dropdown__opt')}>
-              {item.description}
+              {item}
             </div>
           ))
         }

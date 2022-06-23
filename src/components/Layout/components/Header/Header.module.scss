@@ -304,10 +304,13 @@
     font-size: 1.6rem;
   }
   &__icon.icon--sub {
-    float: right;
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
   }
   &__link {
-    margin-left: 0.5rem;
+    width: 100%;
   }
   &__sub {
     display: none;
@@ -325,12 +328,18 @@
     &-item:hover > .mega-menu__sub {
       display: block;
     }
+    &-link {
+      width: 100%;
+    }
     &-item:hover > &-link,
     &-item:hover > &-icon--sub {
       color: var(--primary-color);
     }
     &-icon--sub {
-      float: right;
+      position: absolute;
+      top: 50%;
+      right: 2rem;
+      transform: translateY(-50%);
     }
   }
 }

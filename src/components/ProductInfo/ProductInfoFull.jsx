@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './ProductInfo.module.scss';
 import SelectDropdown from '../SelectDropdown';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -12,51 +13,37 @@ const ProductInfoFull = ({ product }) => {
   const [size, setSize] = useState(undefined);
 
   const handleQuantityChange = (type) => {
-    if(type === 'plus') {
+    if (type === 'plus') {
       setQuantity(+quantity + 1);
-    }else {
+    } else {
       setQuantity(+quantity - 1 === 0 ? 1 : +quantity - 1);
     }
-  }
+  };
   const checkOptions = () => {
-    if(product.attributes && product.attributes.length > 0) {
-      for (const attr of product.attributes) {
-        if(attr.name === 'color' && color === undefined) {
-          alert('Please select color')
-          return false
-        }
-        if(attr.name === 'size' && size === undefined) {
-          alert('Please select size')
-          return false
-        }
-      }
-      return true
-      // if(color === undefined) {
-      //   alert();
-      //   return false;
-      // }
-      // if(size === undefined) {
-      //   alert('Please select size');
-      //   return false;
-      // }
-      // return true
+    if (color === undefined) {
+      alert('Please select color');
+      return false;
     }
-    return true
-  }
+    if (size === undefined) {
+      alert('Please select size');
+      return false;
+    }
+    return true;
+  };
   const handleSelected = (type, value) => {
-    if(type === 'color') {
+    if (type === 'color') {
       setColor(value);
     }
-    if(type === 'size') {
+    if (type === 'size') {
       setSize(value);
     }
-  }
+  };
 
   const handleAddToCart = () => {
-    if(checkOptions()) {
-      console.log({color, size})
+    if (checkOptions()) {
+      console.log({ color, size });
     }
-  }
+  };
 
   return (
     <div className={cx('product-info')}>
@@ -82,21 +69,32 @@ const ProductInfoFull = ({ product }) => {
           )}
         </div>
       </div>
-      {product?.attributes?.length > 0 && (
-        <>
-          <h3 className={cx('product-desc-label')}>AVAILABLE OPTIONS</h3>
-          {product?.attributes.map((attribute, index) => (
-            <div key={index} className={cx('product-box-select')}>
-              <span className={cx('product-box-select__text')}>{attribute.name}:</span>
-              <div className={cx('product-box-select__dropdown')}>
-                <SelectDropdown defaultValue="- Please Select -" options={attribute.values} onChange={(type,value) => handleSelected(type,value)} type={attribute.name} />
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-      {/*
-       */}
+
+      <h3 className={cx('product-desc-label')}>AVAILABLE OPTIONS</h3>
+
+      <div className={cx('product-box-select')}>
+        <span className={cx('product-box-select__text')}>color:</span>
+        <div className={cx('product-box-select__dropdown')}>
+          <SelectDropdown
+            defaultValue="- Please Select -"
+            options={product?.colors}
+            onChange={(type, value) => handleSelected(type, value)}
+            type={'color'}
+          />
+        </div>
+      </div>
+      <div className={cx('product-box-select')}>
+        <span className={cx('product-box-select__text')}>size:</span>
+        <div className={cx('product-box-select__dropdown')}>
+          <SelectDropdown
+            defaultValue="- Please Select -"
+            options={product?.size}
+            onChange={(type, value) => handleSelected(type, value)}
+            type={'size'}
+          />
+        </div>
+      </div>
+
       <div className={cx('product-box-qty')}>
         <span className={cx('product-box-qty__text')}>Quantity:</span>
         <div className={cx('product-box-qty__input-group')}>
@@ -111,7 +109,9 @@ const ProductInfoFull = ({ product }) => {
       </div>
       <div className={cx('product-box-action')}>
         <div className={cx('product-box-action__top')}>
-          <div onClick={handleAddToCart} className={`${cx('product-box-action__btn')} ${cx('btn-add-cart')}`}>Add to Cart</div>
+          <div onClick={handleAddToCart} className={`${cx('product-box-action__btn')} ${cx('btn-add-cart')}`}>
+            Add to Cart
+          </div>
           <div className={`${cx('product-box-action__btn')} ${cx('btn-buy-now')}`}>By Now</div>
         </div>
         <div className={cx('product-box-action__bottom')}>
@@ -139,6 +139,21 @@ const ProductInfoFull = ({ product }) => {
           <span className={cx('product-box-share__icon')}>
             <i className="bx bxl-twitter"></i>
           </span>
+        </div>
+      </div>
+      <div className={cx('product-categories')}>
+        <div className={cx('product-categories__text')}>Categories: </div>
+        <div className={cx('product-categories__list')}>
+          {product?.categories?.map((item, index) => (
+            <React.Fragment key={index}>
+              <Link to={`/category/${item.slug}`} className={cx('product-categories__link')}>
+                {item.name}
+              </Link>
+              {index >= 0 && index !== product?.categories?.length - 1 && ', '}
+
+              {console.log(product?.categories?.length)}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </div>

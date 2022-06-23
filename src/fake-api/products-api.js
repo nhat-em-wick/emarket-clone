@@ -16,31 +16,60 @@ const productsApi = {
     await sleep();
     return new Promise((resolve, reject) => {
       resolve(product);
-      reject('co loi xay ra');
     });
   },
 
-  getAllProducts: async (filter) => {
-    const allProducts = products;
+  getAllProducts: async (filters) => {
+    let temp = products;
+    console.log(filters)
     await sleep();
-    if (filter) {
-      const page = filter.page || 1;
-      const limit = filter.limit || 10;
-      const products = productsApi.pagination(allProducts, page, limit);
+    if (filters) {
+      const page = filters?.page || 1;
+      const limit = filters?.limit || 10;
+      const colors = filters?.colors
+      const sizes = filters?.sizes
+      const category = filters?.category
+      const q = filters?.q
+      const priceGte = filters.price_gte
+      const priceLte = filters.price_lte
+      if (category) {
+        temp = temp.filter(product => {
+          return product.categories.find(itemCate => {
+            return category.includes(itemCate.slug)
+          })
+        })
+      }
+      if(colors?.length > 0) {
+        temp = temp.filter(product => {
+          return product.colors.find(color => colors.includes(color))
+        })
+      }
+      if(sizes?.length > 0) {
+        temp = temp.filter(product => {
+          return product.sizes.find(size => sizes.includes(size))
+        })
+      }
+      if(q !== '') {
+        const keyword = q.trim()
+        temp = temp.filter(product => product.name.toLowerCase().includes(keyword.toLowerCase()))
+      }
+      if(priceGte !== undefined && priceLte !== undefined) {
+        temp = temp.filter(product => product.price_new >= priceGte && product.price_new <= priceLte)
+      }
+      const products = productsApi.pagination(temp, page, limit);
       return new Promise((resolve, reject) => {
         resolve({
-          products,
+          products: products,
           pagination: {
             page,
             limit,
-            total: allProducts.length,
+            total: temp.length,
           },
         });
-        reject('co loi xay ra');
       });
     }
     return new Promise((resolve) => {
-      resolve(allProducts);
+      resolve({products: temp});
     });
   },
 
@@ -49,24 +78,9 @@ const productsApi = {
     const results = products.filter((product) => product.name.toLowerCase().includes(name.toLowerCase()));
     return new Promise((resolve, reject) => {
       resolve(results);
-      reject('co loi xay ra');
     });
   },
-  findProductByCategory: async (categorySlug) => {
-    await sleep();
-    let arr = [];
-    for (const product of products) {
-      for (const cate of product.categories) {
-        if (cate.slug === categorySlug) {
-          arr.push(product);
-        }
-      }
-    }
-    return new Promise((resolve, reject) => {
-      resolve({products: arr})
-      reject('co loi xay ra')
-    })
-  },
+  
 };
 
 export default productsApi;
