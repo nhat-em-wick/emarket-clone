@@ -157,7 +157,7 @@ const Category = (props) => {
                       </div>
                     </div>
                     <div className={cx('content__product')}>
-                      { products.length <= 0 && !loadingProduct && 'khong tim thay sp nao' }
+                      { products.length <= 0 && !loadingProduct && 'Not products' }
                       {
                         loadingProduct ? <Loading loading={loadingProduct} /> : <ListCardGrid type="product" list={products} grid={numberGrid} />
                       }

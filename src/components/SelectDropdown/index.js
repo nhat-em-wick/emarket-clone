@@ -23,7 +23,7 @@ const SelectDropdown = ({defaultValue, options, onChange, type}) => {
 
   return (
     <div className={cx('select-dropdown')}>
-      <div onClick={() => setIsOpen( !isOpen )} className={`${cx('select-dropdown')} ${cx('select-dropdown--selected')}`}>
+      <div onClick={() => setIsOpen(!isOpen)} className={`${cx('select-dropdown')} ${cx('select-dropdown--selected')}`}>
         {selected}
         <i className='bx bxs-down-arrow'></i>
       </div>

@@ -88,7 +88,7 @@ const ProductInfoFull = ({ product }) => {
         <div className={cx('product-box-select__dropdown')}>
           <SelectDropdown
             defaultValue="- Please Select -"
-            options={product?.size}
+            options={product?.sizes}
             onChange={(type, value) => handleSelected(type, value)}
             type={'size'}
           />
