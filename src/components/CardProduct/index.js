@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './CardProduct.module.scss';
 import { Link } from 'react-router-dom';
-
+import {set, remove} from '~/redux/ModalProductSlice'
+import { useDispatch } from 'react-redux';
 const cx = classNames.bind(styles);
 const CardProduct = (props) => {
   const product = props.item;
-
+  const dispatch = useDispatch()
   const percentRating = useMemo(() => {
     const percent = (product.rating * 100) / 5;
     return percent;
@@ -48,7 +49,7 @@ const CardProduct = (props) => {
           <i className="bx bxs-heart"></i>
           <span>Add to wishlist</span>
         </button>
-        <button className={cx('card-product__action-btn')}>
+        <button onClick={() => dispatch(set(product.slug))} className={cx('card-product__action-btn')}>
           <i className="bx bxs-show"></i>
           <span>Quick view</span>
         </button>

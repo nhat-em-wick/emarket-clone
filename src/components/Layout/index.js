@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import styles from './Layout.module.scss';
 import 'boxicons/css/boxicons.min.css';
 import { useLocation } from 'react-router-dom';
-
+import ModalProduct from '../ModalProduct';
 const cx = classNames.bind(styles);
 const Layout = ({children}) => {
   const location = useLocation();
@@ -22,6 +22,7 @@ const Layout = ({children}) => {
         {children}
       </div>
       <Footer/>
+      <ModalProduct />
     </div>
   )
 }

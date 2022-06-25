@@ -27,7 +27,7 @@ const DetailProduct = (props) => {
   const [product, setProduct] = useState({})
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
-  
+  const [relatedProducts, setRelatedProducts] = useState([])
   const sidebarRef = useRef(null);
 
   const [activeSidebarMobile, setActiveSidebarMobile] = useState(false);
@@ -41,6 +41,12 @@ const DetailProduct = (props) => {
        
         const [product, resCate] = await Promise.all([productsApi.getProductBySlug(params.slug),categoriesApi.getListCategories()
         ])
+        const resRelated = await productsApi.getAllProducts({
+          page: 1,
+          limit: 10,
+          category: product.categories[0].slug
+        })
+        setRelatedProducts(resRelated.products)
         setCategories(resCate)
         setProduct(product);
         setLoading(false)
@@ -94,7 +100,7 @@ const DetailProduct = (props) => {
         <div className={cx('related')}>
           <div className="container">
             <ModTitle title="related products" />
-            <ListCardSlider list={products} type="product" slidesPerView={6} />
+            <ListCardSlider list={relatedProducts} type="product" slidesPerView={6} />
           </div>
         </div> 
         </>

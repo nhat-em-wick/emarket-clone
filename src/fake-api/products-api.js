@@ -46,7 +46,7 @@ const productsApi = {
           return product.sizes.find((size) => sizes.includes(size));
         });
       }
-      if (q !== '') {
+      if (q !== '' && q!==undefined) {
         const keyword = q.trim();
         temp = temp.filter((product) => product.name.toLowerCase().includes(keyword.toLowerCase()));
       }

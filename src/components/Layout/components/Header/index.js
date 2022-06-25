@@ -4,21 +4,22 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import logo from '~/assets/images/logo.png';
 import { pages } from './const';
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { updateItem, updateCart, removeItem } from '~/redux/CartSlice';
-
+import { useClickOutside, useDebounce } from '~/custom-hook';
 import categoriesApi from '~/fake-api/categories-api';
-import productsApi from '~/fake-api/products-api'
+import productsApi from '~/fake-api/products-api';
+import { useRef } from 'react';
 
 const cx = classNames.bind(styles);
 
 const Header = (props) => {
   const [headerDynamic, setHeaderDynamic] = useState(false);
-  const [categories, setCategories] = useState([])
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [totalProducts, setTotalProducts] = useState(0)
-  const cartItems = useSelector(state => state.cartStore.cart)
-  const dispatch = useDispatch()
+  const [categories, setCategories] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const cartItems = useSelector((state) => state.cartStore.cart);
+  const dispatch = useDispatch();
   useEffect(() => {
     const handleHeaderDynamic = () => {
       if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
@@ -34,24 +35,24 @@ const Header = (props) => {
   }, []);
 
   useEffect(() => {
-    const slugItems = cartItems.map(item => item.slug)
+    const slugItems = cartItems.map((item) => item.slug);
     const fetchCategories = async () => {
       try {
         const [categories, products] = await Promise.all([
           categoriesApi.getListCategories(),
-          productsApi.findItemsCart(slugItems)
-        ])
-        const resultsProductCart = cartItems.filter(item => {
-          return products.find(product => product.slug === item.slug)
-        })
-        setCategories(categories)
-        dispatch(updateCart(resultsProductCart))
+          productsApi.findItemsCart(slugItems),
+        ]);
+        const resultsProductCart = cartItems.filter((item) => {
+          return products.find((product) => product.slug === item.slug);
+        });
+        setCategories(categories);
+        dispatch(updateCart(resultsProductCart));
       } catch (error) {
-        throw Error(error)
+        throw Error(error);
       }
-    }
-    fetchCategories()
-  }, [])
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     setTotalProducts(cartItems.reduce((total, item) => total + Number(item.quantity), 0));
@@ -81,12 +82,7 @@ const Header = (props) => {
               <Link to="/" className={cx('header-desktop__logo')}>
                 <img src={logo} alt="" />
               </Link>
-              <div className={cx('header-desktop__search')}>
-                <input type="text" placeholder="Search" />
-                <button className={cx('header-desktop__search-button')}>
-                  <i className="bx bx-search"></i>
-                </button>
-              </div>
+              <Search />
               <div className={cx('header-desktop__cart')}>
                 <span className={cx('header-desktop__cart-icon')}>
                   <i className="bx bxs-shopping-bag"></i>
@@ -162,6 +158,93 @@ const Header = (props) => {
   );
 };
 
+const Search = () => {
+  const loadingTimer = useRef(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [showResults, setShowResults] = useState(true)
+  const debounceSearch = useDebounce(searchTerm, 700);
+  const searchResultsRef = useRef(null);
+  const inputRef = useRef(null);
+  useEffect(() => {
+    const fetchSearch = async () => {
+      setLoading(true);
+      const results = await productsApi.findProductByName(debounceSearch.trim());
+      loadingTimer.current = setTimeout(() => {
+        setResults(results);
+        setShowResults(true)
+        setLoading(false);
+      }, 1000);
+    };
+    if (!debounceSearch.trim()) {
+      setResults([]);
+      return;
+    } else {
+      fetchSearch();
+    }
+  }, [debounceSearch]);
+
+  const handleSearchTerm = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+  };
+  const handleClearInput = () => {
+    setSearchTerm('');
+    setResults([]);
+    inputRef.current.focus();
+  };
+
+  useClickOutside(searchResultsRef, () => setShowResults(false))
+
+  return (
+    <div className={cx('header-desktop__search')}>
+      <div className={cx('header-desktop__search-input')}>
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => handleSearchTerm(e)}
+          onFocus={() => setShowResults(true)}
+        />
+        {loading && (
+          <span className={cx('header-desktop__search-clear')}>
+            <i className="bx bx-loader-circle bx-spin"></i>
+          </span>
+        )}
+        {!!searchTerm && !loading &&  (
+          <span onClick={() => setSearchTerm('')} className={cx('header-desktop__search-clear')}>
+            <i className="bx bx-x"></i>
+          </span>
+        )}
+        <ul ref={searchResultsRef} className={`${cx('header-desktop__search-results')} ${
+          showResults && results.length > 0 ? cx('active') : ''
+        }`}>
+          <div className={cx('header-desktop__search-results__inner')}>
+            {results.length <= 0 && !loading ? (
+              <li className={cx('header-desktop__search-results__empty')}>not products</li>
+            ) : (
+              <>
+                {results.map((item, index) => (
+                  <li className={cx('header-desktop__search-results__item')}>
+                    <Link to={`/product/${item.slug}`} className={cx('header-desktop__search-results__link')}>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </>
+            )}
+          </div>
+        </ul>
+      </div>
+      <button className={cx('header-desktop__search-button')}>
+        <i className="bx bx-search"></i>
+      </button>
+    </div>
+  );
+};
+
 const MegaMenu = (props) => {
   const categories = props.categories;
   return (
@@ -189,7 +272,7 @@ const MegaMenu = (props) => {
 
 const SubCategory = (props) => {
   const categories = props.categories;
-  
+
   return (
     <ul className={cx('mega-menu__sub')}>
       {categories?.map((category, index) => (
@@ -213,12 +296,11 @@ const SubCategory = (props) => {
 };
 
 const CartItems = ({ items }) => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleRemove = (product) => {
-    dispatch(removeItem(product))
-  }
+    dispatch(removeItem(product));
+  };
 
   return (
     <div className={cx('header-cart-dropdown')}>
@@ -226,28 +308,23 @@ const CartItems = ({ items }) => {
         {items.length > 0 ? (
           <>
             <ul className={cx('header-cart-dropdown__list')}>
-              {
-                items.map((item, index) => (
-                  <li key={index} className={cx('header-cart-dropdown__item')}>
-                <div className={cx('header-cart-dropdown__item-image')}>
-                  <img
-                    src={item.thumbnail}
-                    alt=""
-                  />
-                </div>
-                <div className={cx('header-cart-dropdown__item-info')}>
-                  <Link to={`/product/${item.slug}`} className={cx('header-cart-dropdown__item-name')}>
-                    {item.name}
-                  </Link>
-                  <span className={cx('header-cart-dropdown__item-qty')}>x{item.quantity}</span>
-                  <span className={cx('header-cart-dropdown__item-price')}>${item.price}</span>
-                  <span onClick={() => handleRemove(item)} className={cx('header-cart-dropdown__item-remove')}>
-                    <i className="bx bx-trash"></i>
-                  </span>
-                </div>
-              </li>
-                ))
-              }
+              {items.map((item, index) => (
+                <li key={index} className={cx('header-cart-dropdown__item')}>
+                  <div className={cx('header-cart-dropdown__item-image')}>
+                    <img src={item.thumbnail} alt="" />
+                  </div>
+                  <div className={cx('header-cart-dropdown__item-info')}>
+                    <Link to={`/product/${item.slug}`} className={cx('header-cart-dropdown__item-name')}>
+                      {item.name}
+                    </Link>
+                    <span className={cx('header-cart-dropdown__item-qty')}>x{item.quantity}</span>
+                    <span className={cx('header-cart-dropdown__item-price')}>${item.price}</span>
+                    <span onClick={() => handleRemove(item)} className={cx('header-cart-dropdown__item-remove')}>
+                      <i className="bx bx-trash"></i>
+                    </span>
+                  </div>
+                </li>
+              ))}
             </ul>
             <div className={cx('header-cart-dropdown__action')}>
               <Link to="/cart" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--view-cart')}`}>

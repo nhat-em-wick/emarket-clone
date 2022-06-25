@@ -40,6 +40,7 @@ const Category = (props) => {
 
   const params = useParams();
   const sidebarRef = useRef(null);
+  const loadingTimerProduct = useRef(null)
 
   const handleShowGrid = (number) => {
     setNumberGrid(number);
@@ -66,9 +67,11 @@ const Category = (props) => {
       setLoadingProduct(true)
       try {
         const resProducts = await productsApi.getAllProducts(filters);
-        setProducts(resProducts.products);
-        setPagination(resProducts.pagination)
-        setLoadingProduct(false);
+        loadingTimerProduct.current = setTimeout(() => {
+          setProducts(resProducts.products);
+          setPagination(resProducts.pagination)
+          setLoadingProduct(false);
+        }, 1000)
       } catch (error) {
         throw Error(error);
       }
