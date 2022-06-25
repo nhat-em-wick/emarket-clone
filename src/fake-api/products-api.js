@@ -13,7 +13,6 @@ const productsApi = {
 
   getProductBySlug: async (slug) => {
     const product = products.find((product) => product.slug === slug);
-    await sleep();
     return new Promise((resolve, reject) => {
       resolve(product);
     });
@@ -21,40 +20,38 @@ const productsApi = {
 
   getAllProducts: async (filters) => {
     let temp = products;
-    console.log(filters)
-    await sleep();
     if (filters) {
       const page = filters?.page || 1;
       const limit = filters?.limit || 10;
-      const colors = filters?.colors
-      const sizes = filters?.sizes
-      const category = filters?.category
-      const q = filters?.q
-      const priceGte = filters.price_gte
-      const priceLte = filters.price_lte
+      const colors = filters?.colors;
+      const sizes = filters?.sizes;
+      const category = filters?.category;
+      const q = filters?.q;
+      const priceGte = filters.price_gte;
+      const priceLte = filters.price_lte;
       if (category) {
-        temp = temp.filter(product => {
-          return product.categories.find(itemCate => {
-            return category.includes(itemCate.slug)
-          })
-        })
+        temp = temp.filter((product) => {
+          return product.categories.find((itemCate) => {
+            return category.includes(itemCate.slug);
+          });
+        });
       }
-      if(colors?.length > 0) {
-        temp = temp.filter(product => {
-          return product.colors.find(color => colors.includes(color))
-        })
+      if (colors?.length > 0) {
+        temp = temp.filter((product) => {
+          return product.colors.find((color) => colors.includes(color));
+        });
       }
-      if(sizes?.length > 0) {
-        temp = temp.filter(product => {
-          return product.sizes.find(size => sizes.includes(size))
-        })
+      if (sizes?.length > 0) {
+        temp = temp.filter((product) => {
+          return product.sizes.find((size) => sizes.includes(size));
+        });
       }
-      if(q !== '') {
-        const keyword = q.trim()
-        temp = temp.filter(product => product.name.toLowerCase().includes(keyword.toLowerCase()))
+      if (q !== '') {
+        const keyword = q.trim();
+        temp = temp.filter((product) => product.name.toLowerCase().includes(keyword.toLowerCase()));
       }
-      if(priceGte !== undefined && priceLte !== undefined) {
-        temp = temp.filter(product => product.price_new >= priceGte && product.price_new <= priceLte)
+      if (priceGte !== undefined && priceLte !== undefined) {
+        temp = temp.filter((product) => product.price_new >= priceGte && product.price_new <= priceLte);
       }
       const products = productsApi.pagination(temp, page, limit);
       return new Promise((resolve, reject) => {
@@ -69,18 +66,31 @@ const productsApi = {
       });
     }
     return new Promise((resolve) => {
-      resolve({products: temp});
+      resolve({ products: temp });
     });
   },
 
   findProductByName: async (name) => {
-    await sleep();
     const results = products.filter((product) => product.name.toLowerCase().includes(name.toLowerCase()));
     return new Promise((resolve, reject) => {
       resolve(results);
     });
   },
-  
+
+  findItemsCart: async (arr) => {
+    let temp = [];
+    if (arr.length > 0) {
+      for (const item of arr) {
+        const product = await productsApi.getProductBySlug(item);
+        if (product) {
+          temp.push(product);
+        }
+      }
+    }
+    return new Promise((resolve) => {
+      resolve({ products: temp });
+    });
+  },
 };
 
 export default productsApi;

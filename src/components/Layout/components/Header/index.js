@@ -4,14 +4,21 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import logo from '~/assets/images/logo.png';
 import { pages } from './const';
+import {useDispatch, useSelector} from 'react-redux'
+import { updateItem, updateCart, removeItem } from '~/redux/CartSlice';
 
 import categoriesApi from '~/fake-api/categories-api';
+import productsApi from '~/fake-api/products-api'
 
 const cx = classNames.bind(styles);
 
 const Header = (props) => {
   const [headerDynamic, setHeaderDynamic] = useState(false);
   const [categories, setCategories] = useState([])
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalProducts, setTotalProducts] = useState(0)
+  const cartItems = useSelector(state => state.cartStore.cart)
+  const dispatch = useDispatch()
   useEffect(() => {
     const handleHeaderDynamic = () => {
       if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
@@ -27,16 +34,29 @@ const Header = (props) => {
   }, []);
 
   useEffect(() => {
+    const slugItems = cartItems.map(item => item.slug)
     const fetchCategories = async () => {
       try {
-        const categories = await categoriesApi.getListCategories()
+        const [categories, products] = await Promise.all([
+          categoriesApi.getListCategories(),
+          productsApi.findItemsCart(slugItems)
+        ])
+        const resultsProductCart = cartItems.filter(item => {
+          return products.find(product => product.slug === item.slug)
+        })
         setCategories(categories)
+        dispatch(updateCart(resultsProductCart))
       } catch (error) {
         throw Error(error)
       }
     }
     fetchCategories()
   }, [])
+
+  useEffect(() => {
+    setTotalProducts(cartItems.reduce((total, item) => total + Number(item.quantity), 0));
+    setTotalPrice(cartItems.reduce((total, item) => total + Number(item.quantity) * Number(item.price), 0));
+  }, [cartItems]);
 
   return (
     <>
@@ -70,11 +90,11 @@ const Header = (props) => {
               <div className={cx('header-desktop__cart')}>
                 <span className={cx('header-desktop__cart-icon')}>
                   <i className="bx bxs-shopping-bag"></i>
-                  <span className={cx('header-desktop__cart-badge')}>0</span>
+                  <span className={cx('header-desktop__cart-badge')}>{totalProducts}</span>
                 </span>
                 <span className={cx('header-desktop__cart-text')}>my cart</span>
-                <span className={cx('header-desktop__cart-price')}>- $0.00</span>
-                <CartItems items={[]} />
+                <span className={cx('header-desktop__cart-price')}>- ${totalPrice}</span>
+                <CartItems items={cartItems} />
               </div>
             </div>
             <div className={cx('header-desktop__bottom')}>
@@ -130,9 +150,9 @@ const Header = (props) => {
               <div className={cx('header-dynamic__cart')}>
                 <span className={cx('header-dynamic__cart-icon')}>
                   <i className="bx bxs-shopping-bag"></i>
-                  <span className={cx('header-dynamic__cart-badge')}>0</span>
+                  <span className={cx('header-dynamic__cart-badge')}>{totalProducts}</span>
                 </span>
-                <CartItems items={[]} />
+                <CartItems items={cartItems} />
               </div>
             </div>
           </div>
@@ -193,66 +213,41 @@ const SubCategory = (props) => {
 };
 
 const CartItems = ({ items }) => {
+
+  const dispatch = useDispatch()
+
+  const handleRemove = (product) => {
+    dispatch(removeItem(product))
+  }
+
   return (
     <div className={cx('header-cart-dropdown')}>
       <div className={cx('header-cart-dropdown__content')}>
         {items.length > 0 ? (
           <>
             <ul className={cx('header-cart-dropdown__list')}>
-              <li className={cx('header-cart-dropdown__item')}>
+              {
+                items.map((item, index) => (
+                  <li key={index} className={cx('header-cart-dropdown__item')}>
                 <div className={cx('header-cart-dropdown__item-image')}>
                   <img
-                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
+                    src={item.thumbnail}
                     alt=""
                   />
                 </div>
                 <div className={cx('header-cart-dropdown__item-info')}>
-                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
+                  <Link to={`/product/${item.slug}`} className={cx('header-cart-dropdown__item-name')}>
+                    {item.name}
                   </Link>
-                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-                  <span className={cx('header-cart-dropdown__item-remove')}>
+                  <span className={cx('header-cart-dropdown__item-qty')}>x{item.quantity}</span>
+                  <span className={cx('header-cart-dropdown__item-price')}>${item.price}</span>
+                  <span onClick={() => handleRemove(item)} className={cx('header-cart-dropdown__item-remove')}>
                     <i className="bx bx-trash"></i>
                   </span>
                 </div>
               </li>
-              <li className={cx('header-cart-dropdown__item')}>
-                <div className={cx('header-cart-dropdown__item-image')}>
-                  <img
-                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
-                    alt=""
-                  />
-                </div>
-                <div className={cx('header-cart-dropdown__item-info')}>
-                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
-                  </Link>
-                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-                  <span className={cx('header-cart-dropdown__item-remove')}>
-                    <i className="bx bx-trash"></i>
-                  </span>
-                </div>
-              </li>
-              <li className={cx('header-cart-dropdown__item')}>
-                <div className={cx('header-cart-dropdown__item-image')}>
-                  <img
-                    src="https://opencart.opencartworks.com/themes/so_emarket/layout2/image/cache/catalog/demo/product/index2/17-270x270.webp"
-                    alt=""
-                  />
-                </div>
-                <div className={cx('header-cart-dropdown__item-info')}>
-                  <Link to="#" className={cx('header-cart-dropdown__item-name')}>
-                    Product Name asdasf efsdsdf asdasd asdvfvf sdas
-                  </Link>
-                  <span className={cx('header-cart-dropdown__item-qty')}>x1</span>
-                  <span className={cx('header-cart-dropdown__item-price')}>$100.00</span>
-                  <span className={cx('header-cart-dropdown__item-remove')}>
-                    <i className="bx bx-trash"></i>
-                  </span>
-                </div>
-              </li>
+                ))
+              }
             </ul>
             <div className={cx('header-cart-dropdown__action')}>
               <Link to="/cart" className={`${cx('header-cart-dropdown__action-link')} ${cx('action--view-cart')}`}>

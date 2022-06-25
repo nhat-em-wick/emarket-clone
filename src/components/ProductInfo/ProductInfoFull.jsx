@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './ProductInfo.module.scss';
 import SelectDropdown from '../SelectDropdown';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addItem } from '~/redux/CartSlice';
 
 const cx = classNames.bind(styles);
 
@@ -12,6 +14,8 @@ const ProductInfoFull = ({ product }) => {
   const [color, setColor] = useState(undefined);
   const [size, setSize] = useState(undefined);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleQuantityChange = (type) => {
     if (type === 'plus') {
       setQuantity(+quantity + 1);
@@ -41,8 +45,22 @@ const ProductInfoFull = ({ product }) => {
 
   const handleAddToCart = () => {
     if (checkOptions()) {
-      console.log({ color, size });
+      dispatch(
+        addItem({
+          slug: product.slug,
+          color: color,
+          size: size,
+          quantity: quantity,
+          price: product.price_new,
+          thumbnail: product.image_thumb,
+          name: product.name
+        }),
+      );
     }
+  };
+
+  const handleByNow = () => {
+    navigate('/cart');
   };
 
   return (
@@ -112,7 +130,9 @@ const ProductInfoFull = ({ product }) => {
           <div onClick={handleAddToCart} className={`${cx('product-box-action__btn')} ${cx('btn-add-cart')}`}>
             Add to Cart
           </div>
-          <div className={`${cx('product-box-action__btn')} ${cx('btn-buy-now')}`}>By Now</div>
+          <div onClick={handleByNow} className={`${cx('product-box-action__btn')} ${cx('btn-buy-now')}`}>
+            By Now
+          </div>
         </div>
         <div className={cx('product-box-action__bottom')}>
           <div className={cx('wishlist')}>
