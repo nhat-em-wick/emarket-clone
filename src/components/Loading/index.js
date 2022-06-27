@@ -6,6 +6,7 @@ import styles from './Loading.module.scss'
 const cx = classNames.bind(styles)
 
 const Loading = ({loading}) => {
+  
   return (
     <div className={`${cx('wrapper')} ${ loading ? cx('active') : ''}`}>
       <div className={cx('loading')}>
@@ -26,6 +27,8 @@ const Loading = ({loading}) => {
   )
 }
 
-Loading.propTypes = {}
+Loading.propTypes = {
+  loading: PropTypes.bool
+}
 
 export default Loading

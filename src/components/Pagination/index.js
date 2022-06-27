@@ -5,15 +5,15 @@ import styles from './Pagination.module.scss'
 import { useLayoutEffect } from 'react'
 
 const cx = classNames.bind(styles)
-const Pagination = ({ pagination, onPageChange, current }) => {
+const Pagination = ({ pagination, onPageChange }) => {
   const { page, limit, total } = pagination
   const totalPages = Math.ceil(total / limit)
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-  const [renderItem, setRenderItem] = useState([])
-  const [currentPage, setCurrentPage] = useState(current)
+  const [renderItem, setRenderItem] = useState(pageNumbers)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const [pageNumberLimit, setpageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
@@ -28,8 +28,9 @@ const Pagination = ({ pagination, onPageChange, current }) => {
 
   useEffect(() => {
     setRenderItem(pageNumbers)
-    setCurrentPage(current)
   }, [pagination])
+
+  
 
   const handlePrev = () => {
     handlePageChange(currentPage - 1)
@@ -57,15 +58,15 @@ const Pagination = ({ pagination, onPageChange, current }) => {
       </span>
       {
         renderItem.map((item, index) => (
-          <>
+          <React.Fragment key={index}>
             {
               (item < maxPageNumberLimit + 1 && item > minPageNumberLimit) ? <span
                 onClick={() => handlePageChange(item)}
-                key={index} className={`${cx('pagination__item')} ${item === currentPage ? cx('active') : ''}`}>
+                 className={`${cx('pagination__item')} ${item === currentPage ? cx('active') : ''}`}>
                 {item}
               </span> : null
             }
-          </>
+          </React.Fragment>
         ))
       }
 

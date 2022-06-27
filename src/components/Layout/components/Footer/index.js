@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Footer.module.scss';
@@ -9,7 +9,7 @@ import { contactInfo } from './const';
 const cx = classNames.bind(styles);
 
 const Footer = (props) => {
-  
+  console.log('footer')
   return (
     <footer className={`${cx('wrapper')}`}>
       <section className={cx('banner')}>
@@ -146,4 +146,4 @@ const Footer = (props) => {
 
 Footer.propTypes = {};
 
-export default Footer;
+export default memo(Footer);

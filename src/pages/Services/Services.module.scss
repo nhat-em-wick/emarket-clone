@@ -1,0 +1,36 @@
+.wrapper {
+  padding-top: 1rem;
+}
+.question-item {
+  &:last-child {
+    margin-bottom: 3rem;
+  }
+  &__heading {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 2rem;
+    span {
+      width: 4.5rem;
+      height: 4.5rem;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      font-size: 2.3rem;
+      font-weight: var(--font-weight-bold);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    h3 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+    }
+  }
+  &__content {
+    p {
+      line-height: 2;
+    }
+  }
+}

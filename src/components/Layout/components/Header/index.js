@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, memo } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import logo from '~/assets/images/logo.png';
@@ -58,14 +58,16 @@ const Header = (props) => {
     setTotalProducts(cartItems.reduce((total, item) => total + Number(item.quantity), 0));
     setTotalPrice(cartItems.reduce((total, item) => total + Number(item.quantity) * Number(item.price), 0));
   }, [cartItems]);
-
+  let activeStyle = {
+    color: 'var(--primary-color)',
+  };
   return (
     <>
       <header className={`${cx('header-wrapper')}`}>
         <div className="container">
           <div className={cx('header-mobile')}>
             <div className={cx('header-mobile__content')}>
-              <span className={`${cx('header-mobile__icon')} ${cx('icon--menu')}`}>
+              <span onClick={() => props.onSideBar()} className={`${cx('header-mobile__icon')} ${cx('icon--menu')}`}>
                 <i className="bx bx-menu-alt-left"></i>
               </span>
               <Link to="/" className={cx('header-mobile__logo')}>
@@ -106,9 +108,14 @@ const Header = (props) => {
               </div>
               <div className={cx('header-desktop__pages')}>
                 {pages.map((item, index) => (
-                  <Link to={item.path} className={cx('header-desktop__page')} key={index}>
+                  <NavLink
+                    to={item.path}
+                    className={`${cx('header-desktop__page')}`}
+                    style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                    key={index}
+                  >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
               <div className={cx('header-desktop__auth')}>
@@ -136,9 +143,14 @@ const Header = (props) => {
             <div className={cx('header-dynamic__content-center')}>
               <div className={cx('header-dynamic__pages')}>
                 {pages.map((item, index) => (
-                  <Link to={item.path} className={cx('header-dynamic__page')} key={index}>
+                  <NavLink
+                    style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                    to={item.path}
+                    className={cx('header-dynamic__page')}
+                    key={index}
+                  >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
             </div>
@@ -163,17 +175,21 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(true)
+  const [showResults, setShowResults] = useState(true);
   const debounceSearch = useDebounce(searchTerm, 700);
   const searchResultsRef = useRef(null);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchSearch = async () => {
       setLoading(true);
-      const results = await productsApi.findProductByName(debounceSearch.trim());
+      const results = await productsApi.findProductByName({
+        q: debounceSearch.trim(),
+      });
       loadingTimer.current = setTimeout(() => {
-        setResults(results);
-        setShowResults(true)
+        setResults(results.products);
+        setShowResults(true);
         setLoading(false);
       }, 1000);
     };
@@ -195,7 +211,14 @@ const Search = () => {
     inputRef.current.focus();
   };
 
-  useClickOutside(searchResultsRef, () => setShowResults(false))
+  useClickOutside(searchResultsRef, () => setShowResults(false));
+  const handleNavigateSearch = () => {
+    if (!debounceSearch.trim()) {
+      return;
+    } else {
+      navigate(`/search?q=${debounceSearch.trim()}`);
+    }
+  };
 
   return (
     <div className={cx('header-desktop__search')}>
@@ -213,32 +236,27 @@ const Search = () => {
             <i className="bx bx-loader-circle bx-spin"></i>
           </span>
         )}
-        {!!searchTerm && !loading &&  (
+        {!!searchTerm && !loading && (
           <span onClick={() => setSearchTerm('')} className={cx('header-desktop__search-clear')}>
             <i className="bx bx-x"></i>
           </span>
         )}
-        <ul ref={searchResultsRef} className={`${cx('header-desktop__search-results')} ${
-          showResults && results.length > 0 ? cx('active') : ''
-        }`}>
+        <ul
+          ref={searchResultsRef}
+          className={`${cx('header-desktop__search-results')} ${showResults && results.length > 0 ? cx('active') : ''}`}
+        >
           <div className={cx('header-desktop__search-results__inner')}>
-            {results.length <= 0 && !loading ? (
-              <li className={cx('header-desktop__search-results__empty')}>not products</li>
-            ) : (
-              <>
-                {results.map((item, index) => (
-                  <li className={cx('header-desktop__search-results__item')}>
-                    <Link to={`/product/${item.slug}`} className={cx('header-desktop__search-results__link')}>
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </>
-            )}
+            {results.map((item, index) => (
+              <li className={cx('header-desktop__search-results__item')}>
+                <Link to={`/product/${item.slug}`} className={cx('header-desktop__search-results__link')}>
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </div>
         </ul>
       </div>
-      <button className={cx('header-desktop__search-button')}>
+      <button onClick={handleNavigateSearch} className={cx('header-desktop__search-button')}>
         <i className="bx bx-search"></i>
       </button>
     </div>
@@ -347,4 +365,4 @@ const CartItems = ({ items }) => {
   );
 };
 
-export default Header;
+export default memo(Header);

@@ -159,6 +159,9 @@
         width: 100%;
         padding: 1rem 2rem;
       }
+      &__empty {
+        padding: 1rem 2rem;
+      }
     }
   }
   &__cart {
@@ -178,6 +181,7 @@
       justify-content: center;
       align-items: center;
       font-size: 2.5rem;
+      flex-shrink: 0;
       color: #fff;
       position: relative;
     }
@@ -204,6 +208,7 @@
       font-size: var(--small-font-size);
       color: var(--primary-color);
       font-weight: var(--font-weight-bold);
+      min-width: 2rem;
     }
   }
   &__bottom {
@@ -246,6 +251,9 @@
     text-transform: uppercase;
     color: var(--title-color);
     font-weight: var(--font-weight-bold);
+    &.active {
+      color: var(--primary-color);
+    }
     &:hover {
       color: var(--primary-color);
     }

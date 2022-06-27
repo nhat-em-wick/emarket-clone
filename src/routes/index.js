@@ -1,31 +1,34 @@
+import { BrowserRouter as RouterWeb, Routes, Route, Navigate } from 'react-router-dom';
+
+import Layout from '~/components/Layout';
 import Home from '~/pages/Home';
-import Following from '~/pages/Following';
 import DetailCategory from '~/pages/DetailCategory'
 import DetailProduct from '~/pages/DetailProduct'
 import Cart from '~/pages/Cart'
-const publicRoutes = [
-  {
-    path: '/',
-    component: Home,
-  },
-  {
-    path: '/follow',
-    component: Following,
-  },
-  {
-    path: '/category/:slug',
-    component: DetailCategory
-  },
-  {
-    path: '/product/:slug',
-    component: DetailProduct
-  },
-  {
-    path: '/cart',
-    component: Cart
-  }
-];
+import Services from '~/pages/Services/Services';
+import Search from '~/pages/Search';
 
-const privateRoutes = [];
+function Router() {
+  return (
+    <RouterWeb>
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />}/>
+            <Route path='category'>
+              <Route path='/category' element={<Navigate replace to={'/'} />}/>
+              <Route path=':slug' element={<DetailCategory/>}/>
+            </Route>
+            <Route path='product'>
+              <Route path='/product' element={<Navigate replace to={'/'} />}/>
+              <Route path=':slug' element={<DetailProduct/>}/>
+            </Route>
+            <Route path='cart' element={<Cart />}/>
+            <Route path='services' element={<Services />}/>
+            <Route path='search' element={<Search />}></Route>
+          </Route>
+        </Routes>
+    </RouterWeb>
+  );
+}
 
-export { publicRoutes, privateRoutes };
+export default Router;

@@ -14,7 +14,6 @@ import { useParams } from 'react-router-dom';
 import productsApi from '~/fake-api/products-api';
 import categoriesApi from '~/fake-api/categories-api';
 
-
 const cx = classNames.bind(styles);
 const Category = (props) => {
   const [numberGrid, setNumberGrid] = useState(4);
@@ -23,24 +22,24 @@ const Category = (props) => {
   const [loadingProduct, setLoadingProduct] = useState(false);
   const [category, setCategory] = useState();
   const [products, setProducts] = useState([]);
- 
+
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
     colors: [],
     sizes: [],
     price_gte: 0,
-    price_lte: 10000
+    price_lte: 10000,
   });
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
-    total: 0
-  })
+    total: 0,
+  });
 
   const params = useParams();
   const sidebarRef = useRef(null);
-  const loadingTimerProduct = useRef(null)
+  const loadingTimerProduct = useRef(null);
 
   const handleShowGrid = (number) => {
     setNumberGrid(number);
@@ -49,29 +48,29 @@ const Category = (props) => {
   useClickOutside(sidebarRef, () => setOpenSidebar(false));
 
   useEffect(() => {
-    setLoadingPage(true)
+    setLoadingPage(true);
     const fetchCategory = async () => {
       const resCate = await categoriesApi.getCategoryBySlug(params.slug);
       setCategory(resCate);
       setFilters({
         ...filters,
-        category: resCate.slug
-      })
-      setLoadingPage(false)
-    }
-    fetchCategory()
-  }, [params])
+        category: resCate.slug,
+      });
+      setLoadingPage(false);
+    };
+    fetchCategory();
+  }, [params]);
 
   useLayoutEffect(() => {
     const fetchProducts = async () => {
-      setLoadingProduct(true)
+      setLoadingProduct(true);
       try {
         const resProducts = await productsApi.getAllProducts(filters);
         loadingTimerProduct.current = setTimeout(() => {
           setProducts(resProducts.products);
-          setPagination(resProducts.pagination)
+          setPagination(resProducts.pagination);
           setLoadingProduct(false);
-        }, 1000)
+        }, 1000);
       } catch (error) {
         throw Error(error);
       }
@@ -81,12 +80,10 @@ const Category = (props) => {
     }
   }, [filters]);
 
-  
-
   const handlePageChange = (page) => {
     setFilters({
       ...filters,
-      page: page
+      page: page,
     });
   };
 
@@ -94,11 +91,9 @@ const Category = (props) => {
     setFilters({
       ...filters,
       limit: number,
-      page: 1
-    })
-  }
-
-  console.log('fi', filters)
+      page: 1,
+    });
+  };
 
   return (
     <div className={cx('wrapper')}>
@@ -136,8 +131,9 @@ const Category = (props) => {
                               <div
                                 key={index}
                                 onClick={() => handleShowGrid(item)}
-                                className={`${cx('filter-top-panel__grid-item')} ${numberGrid === item ? cx('active') : ''
-                                  }`}
+                                className={`${cx('filter-top-panel__grid-item')} ${
+                                  numberGrid === item ? cx('active') : ''
+                                }`}
                               >
                                 <span>{item}</span>
                               </div>
@@ -160,17 +156,22 @@ const Category = (props) => {
                       </div>
                     </div>
                     <div className={cx('content__product')}>
-                      { products.length <= 0 && !loadingProduct && 'Not products' }
-                      {
-                        loadingProduct ? <Loading loading={loadingProduct} /> : <ListCardGrid type="product" list={products} grid={numberGrid} />
-                      }
+                      {products.length <= 0 && !loadingProduct && 'Not products'}
+                      {loadingProduct ? (
+                        <Loading loading={loadingProduct} />
+                      ) : (
+                        <ListCardGrid type="product" list={products} grid={numberGrid} />
+                      )}
                     </div>
-                    {
-                      products.length > 0 && <div className={cx('pagination-wrapper')}>
-                        <Pagination pagination={pagination} onPageChange={(page) => handlePageChange(page)} current={filters.page} />
+                    {products.length > 0 && (
+                      <div className={cx('pagination-wrapper')}>
+                        <Pagination
+                          pagination={pagination}
+                          onPageChange={(page) => handlePageChange(page)}
+                          current={pagination.page}
+                        />
                       </div>
-                    }
-
+                    )}
                   </section>
                 </div>
               </div>
@@ -192,14 +193,14 @@ const Sidebar = (props) => {
 
   const [checkedColor, setCheckedColor] = useState([]);
   const [checkedSize, setCheckedSize] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
 
   const minRangeRef = useRef(null);
   const maxRangeRef = useRef(null);
   const progressRef = useRef(null);
 
-  const debounceValueSearch = useDebounce(searchTerm, 700)
-  const debouncePrice = useDebounce(priceFilter, 700)
+  const debounceValueSearch = useDebounce(searchTerm, 700);
+  const debouncePrice = useDebounce(priceFilter, 700);
 
   const handleCheckedColor = (value) => {
     setCheckedColor((prev) => {
@@ -225,12 +226,12 @@ const Sidebar = (props) => {
   useEffect(() => {
     props.setFilters({
       ...props.filters,
-      page: 1,  
+      page: 1,
       colors: checkedColor,
       sizes: checkedSize,
       q: searchTerm,
       price_gte: priceFilter.min,
-      price_lte: priceFilter.max
+      price_lte: priceFilter.max,
     });
   }, [checkedColor, checkedSize, debounceValueSearch, debouncePrice]);
 
@@ -239,7 +240,7 @@ const Sidebar = (props) => {
     if (!searchValue.startsWith(' ')) {
       setSearchTerm(searchValue);
     }
-  }
+  };
 
   const handleTypingFilterPrice = (e) => {
     if (e.target.className === 'input-price-min') {
@@ -285,7 +286,7 @@ const Sidebar = (props) => {
   }, [priceFilter]);
 
   const handleResetFilters = () => {
-    setSearchTerm('')
+    setSearchTerm('');
     setCheckedColor([]);
     setCheckedSize([]);
     setPriceFilter({
@@ -301,7 +302,7 @@ const Sidebar = (props) => {
         <SidebarItem option={'search'}>
           <div className={cx('filter__item-opt')}>
             <div className={cx('filter__item-opt__search')}>
-              <input value={searchTerm} type={'text'} placeholder="search" onChange={e => handleSearchValue(e)} />
+              <input value={searchTerm} type={'text'} placeholder="search" onChange={(e) => handleSearchValue(e)} />
               <button className={cx('search-btn')}>
                 <i className="bx bx-search"></i>
               </button>

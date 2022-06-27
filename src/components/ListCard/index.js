@@ -62,7 +62,7 @@ ListCardGrid.propTypes = {
   grid: PropTypes.number,
 };
 
-export const ListCardSlider = ({ type, list, slidesPerView, loading }) => {
+export const ListCardSlider = ({ type, list, slidesPerView }) => {
   const nextSlideRef = useRef(null);
   const prevSlideRef = useRef(null);
 
@@ -112,29 +112,13 @@ export const ListCardSlider = ({ type, list, slidesPerView, loading }) => {
       >
         {type === 'category' ? (
           <>
-            {loading ? (
-              <>
-                {Array(slidesPerView)
-                  .fill()
-                  .map((item, index) => (
-                    <SwiperSlide key={index}>
-                      <div className={`${cx('list-card-slider__item')}`}>
-                        <CardCategory.Loading />
-                      </div>
-                    </SwiperSlide>
-                  ))}
-              </>
-            ) : (
-              <>
-                {list.map((item, index) => (
-                  <SwiperSlide key={index}>
-                    <div className={`${cx('list-card-slider__item')}`}>
-                      <CardCategory item={item} />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </>
-            )}
+            {list.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div className={`${cx('list-card-slider__item')}`}>
+                  <CardCategory item={item} />
+                </div>
+              </SwiperSlide>
+            ))}
           </>
         ) : (
           <>

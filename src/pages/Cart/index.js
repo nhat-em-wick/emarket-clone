@@ -9,7 +9,9 @@ import { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useDebounce } from '~/custom-hook';
+import Dialog from '~/components/Dialog';
 import { updateItem, updateCart, removeItem } from '~/redux/CartSlice';
+import { setDialog } from '~/redux/DialogSlice';
 import productsApi from '~/fake-api/products-api';
 
 const cx = classNames.bind(styles);
@@ -48,6 +50,7 @@ const Cart = (props) => {
       {loadingPage ? (
         <Loading loading={loadingPage} />
       ) : (
+        <>
         <div className="container">
           <h1 className={cx('heading')}>Shopping Cart</h1>
           {cartItems.length <= 0 ? (
@@ -112,6 +115,7 @@ const Cart = (props) => {
             </div>
           )}
         </div>
+        </>
       )}
     </div>
   );
@@ -137,7 +141,13 @@ const CartItem = ({ product }) => {
   }
 
   const handleRemove = () => {
-    dispatch(removeItem(product))
+    // dispatch(removeItem(product))
+    dispatch(setDialog({
+      title: 'delete product',
+      content: 'confirm',
+      textConfirm: 'confirm',
+      textCancel: 'cancel'
+    }))
   }
 
   return (

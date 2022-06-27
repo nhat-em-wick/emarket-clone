@@ -8,14 +8,12 @@ const sleep = async () => {
 
 const categoriesApi = {
   getListCategories: async () => {
-    await sleep()
     return new Promise((resolve, reject) => {
       resolve(listCategories)
     })
   },
   getCategoryBySlug: async (slug) => {
     const category = categories.find((category) => category.slug === slug);
-    await sleep()
     return new Promise((resolve, reject) => {
       resolve(category)
     })

@@ -46,17 +46,17 @@ const productsApi = {
           return product.sizes.find((size) => sizes.includes(size));
         });
       }
-      if (q !== '' && q!==undefined) {
+      if (q !== '' && q !== undefined) {
         const keyword = q.trim();
         temp = temp.filter((product) => product.name.toLowerCase().includes(keyword.toLowerCase()));
       }
       if (priceGte !== undefined && priceLte !== undefined) {
         temp = temp.filter((product) => product.price_new >= priceGte && product.price_new <= priceLte);
       }
-      const products = productsApi.pagination(temp, page, limit);
+      const productsPagi = productsApi.pagination(temp, page, limit);
       return new Promise((resolve, reject) => {
         resolve({
-          products: products,
+          products: productsPagi,
           pagination: {
             page,
             limit,
@@ -70,10 +70,35 @@ const productsApi = {
     });
   },
 
-  findProductByName: async (name) => {
-    const results = products.filter((product) => product.name.toLowerCase().includes(name.toLowerCase()));
+  findProductByName: async (filters) => {
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const q = filters.q;
+    let temp = products;
+    if (q !== '' && q !== undefined) {
+      const keyword = q.trim();
+      temp = temp.filter((product) => product.name.toLowerCase().includes(keyword.toLowerCase()));
+      const productsResults = productsApi.pagination(temp, page, limit);
+      return new Promise((resolve, reject) => {
+        resolve({
+          products: productsResults,
+          pagination: {
+            page,
+            limit,
+            total: temp.length,
+          },
+        });
+      });
+    }
     return new Promise((resolve, reject) => {
-      resolve(results);
+      resolve({
+        products: [],
+        pagination: {
+          page,
+          limit,
+          total: 0,
+        },
+      });
     });
   },
 

@@ -3,26 +3,24 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './CardProduct.module.scss';
 import { Link } from 'react-router-dom';
-import {set, remove} from '~/redux/ModalProductSlice'
+import { set, remove } from '~/redux/ModalProductSlice';
 import { useDispatch } from 'react-redux';
+import Skeleton from '../Skeleton';
+
 const cx = classNames.bind(styles);
 const CardProduct = (props) => {
   const product = props.item;
-  const dispatch = useDispatch()
-  const percentRating = useMemo(() => {
-    const percent = (product.rating * 100) / 5;
-    return percent;
-  }, []);
+  const dispatch = useDispatch();
+
+  const percentRating = (product.rating * 100) / 5;
 
   return (
     <div className={cx('card-product')}>
-      {product.price_old && <span className={cx('card-product__label-sale')}>
-        {Math.round(
-          ((product.price_new - product.price_old) / product.price_old) *
-            100
-        )}
-        %
-      </span>}
+      {product.price_old && (
+        <span className={cx('card-product__label-sale')}>
+          {Math.round(((product.price_new - product.price_old) / product.price_old) * 100)}%
+        </span>
+      )}
       <Link to={`/product/${product.slug}`} className={cx('card-product__img')}>
         <img src={product.image_thumb} alt={product.name} />
       </Link>
@@ -58,6 +56,30 @@ const CardProduct = (props) => {
   );
 };
 
-CardProduct.propTypes = {};
+CardProduct.propTypes = {
+  item: PropTypes.object,
+};
+
+const Loading = () => (
+  <div className={cx('card-product')}>
+    <div className={cx('card-product__img')}>
+      <Skeleton style={{'position': 'relative', 'top': '0', 'left': '0', 'paddingTop': '100%'}} />
+    </div>
+    <div className={cx('card-product__content')}>
+      <h3 className={cx('card-product__name')}>
+        <Skeleton style={{'height': '2rem'}} />
+      </h3>
+      <span className={cx('card-product__stars')}>
+        <Skeleton />
+      </span>
+      <div className={cx('card-product__price')}>
+        <span className={cx('card-product__price-new')}><Skeleton /></span>
+        <span className={cx('card-product__price-old')}> <Skeleton /></span>
+      </div>
+    </div>
+  </div>
+);
+
+CardProduct.Loading = Loading
 
 export default CardProduct;
