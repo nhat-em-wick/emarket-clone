@@ -1,10 +1,10 @@
 import { BrowserRouter as RouterWeb, Routes, Route, Navigate } from 'react-router-dom';
 
 import Layout from '~/components/Layout';
-import Home from '~/pages/Home';
-import DetailCategory from '~/pages/DetailCategory'
-import DetailProduct from '~/pages/DetailProduct'
-import Cart from '~/pages/Cart'
+import Home from '~/pages/Home/Home';
+import DetailCategory from '~/pages/DetailCategory/DetailCategory'
+import DetailProduct from '~/pages/DetailProduct/DetailProduct'
+import Cart from '~/pages/Cart/Cart'
 import Services from '~/pages/Services/Services';
 import Search from '~/pages/Search';
 

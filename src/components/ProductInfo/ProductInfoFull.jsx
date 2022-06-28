@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './ProductInfo.module.scss';
-import SelectDropdown from '../SelectDropdown';
+import SelectDropdown from '../SelectDropdown/SelectDropdown';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addItem } from '~/redux/CartSlice';
@@ -51,8 +51,8 @@ const ProductInfoFull = ({ product }) => {
           color: color,
           size: size,
           quantity: quantity,
-          price: product.price_new,
-          thumbnail: product.image_thumb,
+          price: product.discountedPrice,
+          thumbnail: product.thumbnail,
           name: product.name
         }),
       );
@@ -70,12 +70,12 @@ const ProductInfoFull = ({ product }) => {
         <span className={cx('product-stars__inner')} style={{ width: `${(product?.rating * 100) / 5}%` }}></span>
       </span>
       <div className={cx('product-price')}>
-        <span className={cx('price--new')}>${product?.price_new}</span>
-        {product?.price_old && <span className={cx('price--old')}>${product?.price_old}</span>}
+        <span className={cx('price--new')}>${product?.discountedPrice}</span>
+        {product?.price > product?.discountedPrice && <span className={cx('price--old')}>${product?.price}</span>}
       </div>
       <div className={cx('product-box-desc')}>
-        <div className={cx('code')}>Product code: {product?.product_code}</div>
-        <div className={cx('availability')}>
+        <div className={cx('code')}>Product code: {product?.code}</div>
+        {/* <div className={cx('availability')}>
           Availability:
           {product?.availability ? (
             <span className={cx('availability--available')}>
@@ -85,7 +85,7 @@ const ProductInfoFull = ({ product }) => {
           ) : (
             <span className={cx('availability--not-available')}>Not available</span>
           )}
-        </div>
+        </div> */}
       </div>
 
       <h3 className={cx('product-desc-label')}>AVAILABLE OPTIONS</h3>

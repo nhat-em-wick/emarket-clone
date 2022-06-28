@@ -2,11 +2,14 @@
 
 .card-product {
   --mb: .8rem;
-  background-color: var(--bg-color);
+  background-color: #fff;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: var(--mb);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 1rem;
   &__label-sale {
     position: absolute;
     top: 1rem;
@@ -24,10 +27,18 @@
   &__img {
     line-height: 0;
     text-align: center;
+    padding-top: 100%;
     width: 100%;
+    position: relative;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
   &__content {
-    padding: 2rem;
+    padding: 1rem;
+    padding-top: 2rem;
     text-align: center;
   }
   &__name {

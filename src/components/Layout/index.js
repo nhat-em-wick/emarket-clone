@@ -5,9 +5,9 @@ import Footer from './components/Footer';
 import classNames from 'classnames/bind';
 import styles from './Layout.module.scss';
 import 'boxicons/css/boxicons.min.css';
-import { useLocation, Link, Outlet } from 'react-router-dom';
-import ModalProduct from '../ModalProduct';
-import Overlay from '../Overlay';
+import { useLocation, Link, Outlet, useNavigate } from 'react-router-dom';
+import ModalProduct from '../ModalProduct/ModalProduct';
+import Overlay from '../Overlay/Overlay';
 import logo from '~/assets/images/logo.png';
 import categoriesApi from '~/fake-api/categories-api';
 import { useCallback, useRef } from 'react';
@@ -26,6 +26,7 @@ const Layout = ({ children }) => {
   const sidebarRef = useRef();
   useEffect(() => {
     window.scrollTo(0, 0);
+    setActiveSidebar(false)
   }, [location]);
 
   const handleActiveSidebar = useCallback(() => {
@@ -53,6 +54,8 @@ const Layout = ({ children }) => {
 };
 
 const Sidebar = () => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
   return (
     <div className={cx('sidebar__content')}>
       <div className={cx('sidebar__logo')}>
@@ -61,8 +64,8 @@ const Sidebar = () => {
         </Link>
       </div>
       <div className={cx('sidebar__search')}>
-        <input type="text" placeholder="Search" />
-        <button className={cx('sidebar__search-btn')}>
+        <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <button onClick={() => navigate(`/search?q=${searchTerm.trim()}`)} className={cx('sidebar__search-btn')}>
           <i className="bx bx-search"></i>
         </button>
       </div>

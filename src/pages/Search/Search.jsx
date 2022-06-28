@@ -5,9 +5,9 @@ import styles from './Search.module.scss';
 import { useSearchParams, Link } from 'react-router-dom';
 import productsApi from '~/fake-api/products-api';
 import { useRef } from 'react';
-import Pagination from '~/components/Pagination';
+import Pagination from '~/components/Pagination/Pagination';
 import { ListCardGrid } from '~/components/ListCard';
-import Loading from '~/components/Loading';
+import Loading from '~/components/Loading/Loading';
 const cx = classNames.bind(styles);
 
 const Search = (props) => {

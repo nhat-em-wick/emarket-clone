@@ -1,8 +1,10 @@
-
 .card-category {
-  background-color: var(--bg-color);
+  background-color: #fff;
   width: 100%;
   overflow: hidden;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
   &:hover &__img {
     transform: scale(1.05);
   }
@@ -11,6 +13,7 @@
   }
   &__content {
     padding: 0 2rem;
+    padding-top: 2rem;
     margin-top: .5rem;
     margin-bottom: 1.5rem;
   }

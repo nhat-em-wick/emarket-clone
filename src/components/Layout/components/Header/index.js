@@ -20,6 +20,7 @@ const Header = (props) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const cartItems = useSelector((state) => state.cartStore.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   useEffect(() => {
     const handleHeaderDynamic = () => {
       if (document.body.scrollTop > 70 || document.documentElement.scrollTop > 70) {
@@ -38,14 +39,15 @@ const Header = (props) => {
     const slugItems = cartItems.map((item) => item.slug);
     const fetchCategories = async () => {
       try {
-        const [categories, products] = await Promise.all([
+        const [resCategories, products] = await Promise.all([
           categoriesApi.getListCategories(),
           productsApi.findItemsCart(slugItems),
         ]);
+        
         const resultsProductCart = cartItems.filter((item) => {
           return products.find((product) => product.slug === item.slug);
         });
-        setCategories(categories);
+        setCategories(resCategories.categories);
         dispatch(updateCart(resultsProductCart));
       } catch (error) {
         throw Error(error);
@@ -73,7 +75,7 @@ const Header = (props) => {
               <Link to="/" className={cx('header-mobile__logo')}>
                 <img src={logo} alt="" />
               </Link>
-              <span className={`${cx('header-mobile__icon')} ${cx('icon--cart')}`}>
+              <span onTouchEnd={() => navigate(`/cart`)} className={`${cx('header-mobile__icon')} ${cx('icon--cart')}`}>
                 <i className="bx bxs-cart"></i>
                 <span>0</span>
               </span>
@@ -91,7 +93,6 @@ const Header = (props) => {
                   <span className={cx('header-desktop__cart-badge')}>{totalProducts}</span>
                 </span>
                 <span className={cx('header-desktop__cart-text')}>my cart</span>
-                <span className={cx('header-desktop__cart-price')}>- ${totalPrice}</span>
                 <CartItems items={cartItems} />
               </div>
             </div>
@@ -278,7 +279,7 @@ const MegaMenu = (props) => {
                 <span className={`${cx('mega-menu__icon')} ${cx('icon--sub')}`}>
                   <i className="bx bx-chevron-right"></i>
                 </span>
-                <SubCategory categories={category?.children} />
+                <SubCategory categories={category.children} />
               </>
             )}
           </li>

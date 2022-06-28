@@ -35,23 +35,27 @@ const productsApi = {
             return category.includes(itemCate.slug);
           });
         });
+        
       }
       if (colors?.length > 0) {
         temp = temp.filter((product) => {
           return product.colors.find((color) => colors.includes(color));
         });
+
       }
       if (sizes?.length > 0) {
         temp = temp.filter((product) => {
           return product.sizes.find((size) => sizes.includes(size));
         });
+
       }
       if (q !== '' && q !== undefined) {
         const keyword = q.trim();
         temp = temp.filter((product) => product.name.toLowerCase().includes(keyword.toLowerCase()));
+
       }
       if (priceGte !== undefined && priceLte !== undefined) {
-        temp = temp.filter((product) => product.price_new >= priceGte && product.price_new <= priceLte);
+        temp = temp.filter((product) => product.discountedPrice >= priceGte && product.discountedPrice <= priceLte);
       }
       const productsPagi = productsApi.pagination(temp, page, limit);
       return new Promise((resolve, reject) => {
