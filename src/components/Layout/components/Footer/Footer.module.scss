@@ -106,20 +106,12 @@
 
 .middle {
   padding-top: 3.4rem;
-  --gutter: 1.5rem;
-  --width: 100%;
+  
   &__content {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    margin-left: calc(var(--gutter) * -1);
-    margin-right: calc(var(--gutter) * -1);
+    
   } 
   &__box {
-    margin-bottom: 2.4rem;
-    width: var(--width);
-    padding-left: 15px;
-    padding-right: 15px;
+    margin-bottom: 1rem;
     &-title {
       color: var(--title-color);
       font-weight: var(--font-weight-bold);
@@ -151,6 +143,9 @@
     }
     &-text {
 
+    }
+    &-link:hover {
+      color: var(--primary-color-hover);
     }
   }
 }

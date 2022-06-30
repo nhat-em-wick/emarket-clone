@@ -7,7 +7,9 @@ import DetailProduct from '~/pages/DetailProduct/DetailProduct'
 import Cart from '~/pages/Cart/Cart'
 import Services from '~/pages/Services/Services';
 import Search from '~/pages/Search';
-
+import Error from '~/pages/Error';
+import About from '~/pages/About';
+import Contact from '~/pages/Contact'
 function Router() {
   return (
     <RouterWeb>
@@ -24,7 +26,12 @@ function Router() {
             </Route>
             <Route path='cart' element={<Cart />}/>
             <Route path='services' element={<Services />}/>
-            <Route path='search' element={<Search />}></Route>
+            <Route path='search' element={<Search />}>
+            </Route>
+            <Route path='about' element={<About />}/>
+            <Route path='contact' element={<Contact />}/>
+
+            <Route path='*' element={<Error />}/>
           </Route>
         </Routes>
     </RouterWeb>

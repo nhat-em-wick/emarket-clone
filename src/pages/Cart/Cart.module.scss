@@ -1,18 +1,21 @@
-.table-cart-item {
+.table-cart {
   margin-bottom: 2rem;
-  overflow: auto;
   border: 1px solid var(--border-color);
-  thead th:first-child,
-  tbody td:first-child {
-    position: sticky;
-    left: 0;
-  }
-  tbody td:first-child{
-    width: 400px;
+  max-width: 100%;
+  overflow-x: auto;
+  
+  &__head-text {
+    
+    font-weight: 700;
+    flex-shrink: 0;
+    text-transform: capitalize;
+    vertical-align: middle;
+    white-space: nowrap;
   }
 }
 
 .wrapper {
+  padding-top: 1rem;
   position: relative;
   min-height: 70vh;
 }
@@ -26,6 +29,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    min-width: 30rem;
   }
   &__image {
     width: 6rem;
@@ -100,6 +104,7 @@
       }
     }
   }
+
   &__remove {
     font-size: var(--icon-font-size);
     cursor: pointer;
@@ -107,6 +112,11 @@
     &:hover {
       color: var(--secondary-color);
     }
+  }
+  &__price, &__quantity,&__total,&__remove {
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 }
 

@@ -17,7 +17,7 @@ const pages = [
   { path: '/', name: 'Home' },
   { path: '/about', name: 'About' },
   { path: '/contact', name: 'Contact' },
-  { path: '/blog', name: 'Blog' },
+  { path: '/services', name: 'Services' },
 ];
 
 const Layout = ({ children }) => {
@@ -38,11 +38,11 @@ const Layout = ({ children }) => {
   return (
     <>
       <div className={`${cx('wrapper')} ${activeSidebar ? cx('shrink') : ''}`}>
-        <Header onSideBar={handleActiveSidebar} />
+        <Header onSideBar={handleActiveSidebar} pages={pages} />
         <div className={cx('content')}>
           <Outlet />
         </div>
-        <Footer />
+        <Footer pages={pages} />
         <ModalProduct />
       </div>
       <Overlay active={activeSidebar} />

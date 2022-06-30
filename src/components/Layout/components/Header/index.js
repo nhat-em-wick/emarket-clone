@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import logo from '~/assets/images/logo.png';
-import { pages } from './const';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { updateItem, updateCart, removeItem } from '~/redux/CartSlice';
 import { useClickOutside, useDebounce } from '~/custom-hook';
@@ -13,7 +13,7 @@ import { useRef } from 'react';
 
 const cx = classNames.bind(styles);
 
-const Header = (props) => {
+const Header = ({pages, onSideBar}) => {
   const [headerDynamic, setHeaderDynamic] = useState(false);
   const [categories, setCategories] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -39,13 +39,12 @@ const Header = (props) => {
     const slugItems = cartItems.map((item) => item.slug);
     const fetchCategories = async () => {
       try {
-        const [resCategories, products] = await Promise.all([
+        const [resCategories, resProducts] = await Promise.all([
           categoriesApi.getListCategories(),
           productsApi.findItemsCart(slugItems),
         ]);
-        
         const resultsProductCart = cartItems.filter((item) => {
-          return products.find((product) => product.slug === item.slug);
+          return resProducts.products.find((product) => product.slug === item.slug);
         });
         setCategories(resCategories.categories);
         dispatch(updateCart(resultsProductCart));
@@ -69,7 +68,7 @@ const Header = (props) => {
         <div className="container">
           <div className={cx('header-mobile')}>
             <div className={cx('header-mobile__content')}>
-              <span onClick={() => props.onSideBar()} className={`${cx('header-mobile__icon')} ${cx('icon--menu')}`}>
+              <span onClick={() => onSideBar()} className={`${cx('header-mobile__icon')} ${cx('icon--menu')}`}>
                 <i className="bx bx-menu-alt-left"></i>
               </span>
               <Link to="/" className={cx('header-mobile__logo')}>
@@ -103,7 +102,7 @@ const Header = (props) => {
                 </span>
                 <h3 className={cx('header-desktop__categories-title')}>All Categories</h3>
                 <span className={cx('header-desktop__categories-icon')}>
-                  <i class="bx bx-chevron-down"></i>
+                  <i class="bx bxs-chevron-down"></i>
                 </span>
                 <MegaMenu categories={categories} />
               </div>
@@ -121,11 +120,11 @@ const Header = (props) => {
               </div>
               <div className={cx('header-desktop__auth')}>
                 <i className="bx bxs-lock-alt"></i>
-                <Link to="/login" className={cx('header-desktop__auth-link')}>
+                <Link to="#" className={cx('header-desktop__auth-link')}>
                   Login
                 </Link>
                 <span> or </span>
-                <Link to="/register" className={cx('header-desktop__auth-link')}>
+                <Link to="#" className={cx('header-desktop__auth-link')}>
                   Register
                 </Link>
               </div>
