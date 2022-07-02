@@ -60,7 +60,20 @@ const ProductInfoFull = ({ product }) => {
   };
 
   const handleByNow = () => {
-    navigate('/cart');
+    if (checkOptions()) {
+      dispatch(
+        addItem({
+          slug: product.slug,
+          color: color,
+          size: size,
+          quantity: quantity,
+          price: product.discountedPrice,
+          thumbnail: product.thumbnail,
+          name: product.name
+        }),
+      );
+      navigate('/cart');
+    }
   };
 
   return (

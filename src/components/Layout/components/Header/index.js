@@ -219,6 +219,10 @@ const Search = () => {
       navigate(`/search?q=${debounceSearch.trim()}`);
     }
   };
+  const handleNavigateResult = (slug) => {
+    navigate(`/product/${slug}`)
+    setShowResults(false);
+  }
 
   return (
     <div className={cx('header-desktop__search')}>
@@ -248,9 +252,9 @@ const Search = () => {
           <div className={cx('header-desktop__search-results__inner')}>
             {results.map((item, index) => (
               <li className={cx('header-desktop__search-results__item')}>
-                <Link to={`/product/${item.slug}`} className={cx('header-desktop__search-results__link')}>
+                <div onClick={() => handleNavigateResult(item.slug)} className={cx('header-desktop__search-results__link')}>
                   {item.name}
-                </Link>
+                </div>
               </li>
             ))}
           </div>
