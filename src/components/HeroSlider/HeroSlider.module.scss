@@ -1,17 +1,15 @@
-
 .hero-slider {
-  
   margin-bottom: 4rem;
   &__item {
-    height: 250px;
+    height: 100vh;
+    padding-top: 100%;
   }
 }
 
-@media screen and (min-width: 1024px) {
-  .hero-slider {
-    
-    &__item {
-      height: 450px;
-    }
-  }
-}
+// @media screen and (min-width: 1024px) {
+//   .hero-slider {
+//     &__item {
+//       height: 100vh;
+//     }
+//   }
+// }
